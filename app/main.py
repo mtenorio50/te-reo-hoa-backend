@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 from app.database import SessionLocal, engine
@@ -8,6 +9,21 @@ from .utils import sanitize_ai_data, extract_json_from_markdown, extract_ai_text
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Te Reo Hoa API")
+
+# Allowed origins (frontend URLs)
+origins = [
+    "http://localhost:3000",    # For local frontend dev (React, etc.)
+    "https://te-reo-hoa.vercel.com"   # Your deployed frontend URL
+]
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,            # Specific origins
+    allow_credentials=True,
+    allow_methods=["*"],              # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"]               # Allow all headers
+)
 
 # Dependency to get DB session
 
