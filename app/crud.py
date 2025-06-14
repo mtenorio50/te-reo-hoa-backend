@@ -48,3 +48,7 @@ def create_word(db: Session, text: str, ai_data: dict):
 
 def get_users(db: Session):
     return db.query(models.User).all()
+
+
+def get_words(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Word).offset(skip).limit(limit).all()

@@ -71,3 +71,11 @@ class WordOut(BaseModel):
 
 class WordCreate(BaseModel):
     text: str
+
+
+class TranslationRequest(BaseModel):
+    text: str
+
+
+class TranslationResponse(BaseModel):
+    translation: str
