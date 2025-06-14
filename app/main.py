@@ -21,7 +21,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,            # Specific origins
     allow_credentials=True,
-    allow_methods=["*"],              # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_methods=["*"],
     allow_headers=["*"]               # Allow all headers
 )
 
@@ -34,6 +35,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Te Reo Hoa Backend(API) is running"}
 
 
 @app.post("/login", response_model=schemas.Token)
