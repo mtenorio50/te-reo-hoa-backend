@@ -1,0 +1,23 @@
+# Python-specific
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Env & secrets
+.env
+*.env
+*.key
+*.pem
+*.json  # use with caution if you store API keys as JSON
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# Cache
+*.log
+*.sqlite3
