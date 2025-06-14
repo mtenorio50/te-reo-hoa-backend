@@ -2,11 +2,14 @@
 import json
 import re
 
+
 def extract_json_from_markdown(md_text: str) -> dict:
     """Extracts JSON object from markdown or plaintext AI response."""
-    clean = re.sub(r"^```(?:json)?\s*", "", md_text.strip(), flags=re.IGNORECASE)
+    clean = re.sub(r"^```(?:json)?\s*", "",
+                   md_text.strip(), flags=re.IGNORECASE)
     clean = re.sub(r"\s*```$", "", clean.strip())
     return json.loads(clean)
+
 
 def sanitize_ai_data(ai_data: dict) -> dict:
     """Ensures all expected keys exist and are non-None strings."""
@@ -14,6 +17,7 @@ def sanitize_ai_data(ai_data: dict) -> dict:
     for f in fields:
         ai_data[f] = str(ai_data.get(f) or "")
     return ai_data
+
 
 def extract_ai_text(result: dict) -> str:
     """Safely extracts the AI response text from Gemini API result."""

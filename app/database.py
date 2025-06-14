@@ -5,8 +5,10 @@ from sqlalchemy.orm import sessionmaker
 SQLALCHEMY_DATABASE_URL = "sqlite:///./te_reo_hoa.db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, future=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
+SessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine, future=True)
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()
