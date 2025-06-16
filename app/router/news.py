@@ -92,7 +92,7 @@ async def get_gemini_positive_news():
             status_code=502, detail="Failed to parse Gemini's news JSON.")
 
 
-@router.get("/news/", tags=["News"])
+@router.get("/", tags=["News"])
 async def get_positive_news():
     try:
         news_json = await get_gemini_positive_news()

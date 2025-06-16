@@ -7,7 +7,7 @@ from ..utils import sanitize_ai_data, extract_json_from_markdown, extract_ai_tex
 router = APIRouter(tags=["Translate"])
 
 
-@router.post("/translate", response_model=TranslationResponse)
+@router.post("/", response_model=TranslationResponse)
 async def translate_word(request: TranslationRequest):
     # Call your AI or translation logic here
     result = await get_translation(request.text)
