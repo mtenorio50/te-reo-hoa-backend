@@ -7,11 +7,11 @@ from app.utils import sanitize_level, sanitize_ai_data, extract_json_from_markdo
 
 router = APIRouter(tags=["Words"])
 
-@router.get("/", response_model=List[schemas.WordOut])
+@router.get("/list", response_model=List[schemas.WordOut])
 def list_words(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user=Depends(auth.require_admin)):
     return crud.get_words(db, skip=skip, limit=limit)
 
-@router.post("/", response_model=schemas.WordOut)
+@router.post("/add", response_model=schemas.WordOut)
 async def add_word(
     word: schemas.WordCreate,
     db: Session = Depends(get_db),
