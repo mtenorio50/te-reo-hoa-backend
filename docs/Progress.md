@@ -18,9 +18,8 @@
   Users can now search and filter vocabulary by level, type, domain, and text.
 
 - **Positive News Feed:**  
-  Integrated `/news/` endpoint that fetches Māori news from RNZ Te Ao Māori and Te Ao Māori News,  
-  then uses Google Gemini AI to filter and return only positive, uplifting stories.  
-  Each news item includes title, link, summary, thumbnail, and category.
+  Integrated `/news/` endpoint that fetches Māori news that uses Google Gemini AI to filter and return only positive, uplifting stories.  
+  Each news item includes title, link, summary, sourceURL, and imageURL.
 
 ---
 
