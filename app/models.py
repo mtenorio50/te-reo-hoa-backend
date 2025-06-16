@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, Enum, ForeignKey
+from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
+import enum
 
 
 class User(Base):
@@ -25,3 +27,18 @@ class Word(Base):
     # Lowercased version for dedup/search
     normalized = Column(String, index=True)
     notes = Column(Text)                  # Cultural/usage notes
+
+
+class ProgressStatus(enum.Enum):
+    unlearned = "unlearned"
+    learned = "learned"
+    review = "review"
+    starred = "starred"
+
+class UserWordProgress(Base):
+    __tablename__ = "user_word_progress"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    word_id = Column(Integer, ForeignKey("words.id"))
+    status = Column(Enum(ProgressStatus), default=ProgressStatus.unlearned)
+    updated_at = Column(DateTime, default=datetime.utcnow)

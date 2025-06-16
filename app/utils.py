@@ -2,12 +2,24 @@
 import json
 import re
 
+ALLOWED_LEVELS = ["beginner", "intermediate"]
+
+
+def sanitize_level(ai_level: str) -> str:
+    ai_level = (ai_level or "")
+    if ai_level in ALLOWED_LEVELS:
+        return ai_level
+    return "beginner"  # Or prompt admin to choose
+
 
 def extract_json_from_markdown(md_text: str) -> dict:
     """Extracts JSON object from markdown or plaintext AI response."""
     clean = re.sub(r"^```(?:json)?\s*", "",
                    md_text.strip(), flags=re.IGNORECASE)
     clean = re.sub(r"\s*```$", "", clean.strip())
+    if not clean or not clean.strip().startswith("{"):
+        print("AI response is not valid JSON:", repr(clean))
+        raise ValueError("AI did not return valid JSON")
     return json.loads(clean)
 
 
@@ -33,3 +45,11 @@ def extract_ai_text(result: dict) -> str:
         print("AI response extraction failed:", e)
         print("Full response:", result)
         return ""
+
+def news_extract_json_from_markdown(md_text: str) -> str:
+    """
+    Strips markdown code fences (``` or ```json) from a string and returns the inner JSON string.
+    """
+    clean = re.sub(r"^```(?:json)?\s*", "", md_text.strip(), flags=re.IGNORECASE)
+    clean = re.sub(r"\s*```$", "", clean.strip())
+    return clean
