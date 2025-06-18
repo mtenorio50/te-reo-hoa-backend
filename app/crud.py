@@ -28,7 +28,7 @@ def get_word_by_normalized(db: Session, normalized: str):
     return db.query(models.Word).filter(models.Word.normalized == normalized).first()
 
 
-def create_word(db: Session, text: str, ai_data: dict, level):
+def create_word(db: Session, text: str, ai_data: dict, level, audio_url=None):
     normalized = text.strip().lower()
     db_word = models.Word(
         text=text.strip(),
@@ -37,7 +37,7 @@ def create_word(db: Session, text: str, ai_data: dict, level):
         type=ai_data.get("type"),
         domain=ai_data.get("domain"),
         example=ai_data.get("example"),
-        audio_url=None,  # to be added later
+        audio_url=audio_url,
         normalized=normalized,
         notes=ai_data.get("notes"),
     )

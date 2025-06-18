@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.database import engine
 from app import models
 from app.router import users, words, progress, quiz, translate, login, news
@@ -26,6 +27,7 @@ def read_root():
     return {"message": "Te Reo Hoa Backend(API) is running"}
 
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(login.router, prefix="/login")
 app.include_router(users.router, prefix="/users")
 app.include_router(words.router, prefix="/words")

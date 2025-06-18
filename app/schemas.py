@@ -31,7 +31,7 @@ class WordBase(BaseModel):
     type: Optional[str] = ""
     domain: Optional[str] = ""
     example: Optional[str] = ""
-    audio_url: Optional[str] = None
+    audio_url: Optional[str] = ""
     normalized: str
     notes: Optional[str] = ""
 
@@ -59,7 +59,7 @@ class WordOut(BaseModel):
     type: Optional[str] = ""
     domain: Optional[str] = ""
     example: Optional[str] = ""
-    audio_url: Optional[str] = None
+    audio_url: Optional[str] = ""
     normalized: str
     notes: Optional[str] = ""
 

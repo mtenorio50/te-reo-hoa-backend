@@ -27,6 +27,7 @@ class Word(Base):
     # Lowercased version for dedup/search
     normalized = Column(String, index=True)
     notes = Column(Text)                  # Cultural/usage notes
+    
 
 
 class ProgressStatus(enum.Enum):
@@ -34,6 +35,7 @@ class ProgressStatus(enum.Enum):
     learned = "learned"
     review = "review"
     starred = "starred"
+
 
 class UserWordProgress(Base):
     __tablename__ = "user_word_progress"

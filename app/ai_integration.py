@@ -1,5 +1,6 @@
 import httpx
 import os
+import boto3
 from .utils import extract_json_from_markdown, sanitize_ai_data
 from dotenv import load_dotenv
 from app.schemas import NewsItem
@@ -9,6 +10,11 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_AI_API_KEY")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GOOGLE_API_KEY}"
+
+
+AUDIO_DIR = "./static/audio/"
+os.makedirs(AUDIO_DIR, exist_ok=True)
+polly_client = boto3.client("polly", region_name="ap-southeast-2")
 
 
 async def get_translation(word: str):
@@ -40,8 +46,8 @@ async def get_translation(word: str):
 
 async def get_positive_news_from_gemini(news_items: list[NewsItem]) -> list[dict]:
     prompt = (
-        
-        
+
+
         "FOCUS ON POSITIVE NEWS ONLY: Select only positive, uplifting, and constructive news "
         "stories. Avoid negative news such as conflicts, tragedies, controversies, or problems. "
         "Focus on achievements, celebrations, cultural events, educational initiatives, business "
@@ -68,3 +74,35 @@ async def get_positive_news_from_gemini(news_items: list[NewsItem]) -> list[dict
             print("Failed to parse Gemini response:", e)
             print("Raw response:", response_json)
             raise
+
+
+async def synthesize_maori_audio_with_polly(maori_text, voice_id="Aria", output_format="mp3"):
+    response = polly_client.synthesize_speech(
+        Text=maori_text,
+        VoiceId=voice_id,
+        OutputFormat=output_format,
+        Engine="neural"
+    )
+    audio_stream = response.get("AudioStream")
+    if not audio_stream:
+        raise Exception("No audio stream returned from Polly.")
+    filename = f"polly_{maori_text.replace(' ', '_').lower()}.mp3"
+    audio_path = os.path.join(AUDIO_DIR, filename)
+    with open(audio_path, "wb") as f:
+        f.write(audio_stream.read())
+    return filename
+
+
+async def get_pronunciation_guide(maori_word):
+    prompt = f"""For the Māori word "{maori_word}", provide:
+- The correct IPA pronunciation guide (International Phonetic Alphabet)
+- A simple English phonetic spelling
+Return your answer as a valid JSON object, no markdown, like:
+{{
+  "ipa": "...",
+  "phonetic": "..."
+}}
+"""
+    # (Use same logic as your other Gemini calls, then parse as JSON)
+    # Return as string or dict as you like (save in DB as needed)
+    # See previous responses for example code
