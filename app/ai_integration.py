@@ -76,7 +76,7 @@ async def get_positive_news_from_gemini(news_items: list[NewsItem]) -> list[dict
             raise
 
 
-async def synthesize_maori_audio_with_polly(maori_text, voice_id="Aria", output_format="mp3"):
+async def synthesize_maori_audio_with_polly(maori_text, voice_id="Aria", output_format="mp3", filename_override=None):
     response = polly_client.synthesize_speech(
         Text=maori_text,
         VoiceId=voice_id,
@@ -86,7 +86,7 @@ async def synthesize_maori_audio_with_polly(maori_text, voice_id="Aria", output_
     audio_stream = response.get("AudioStream")
     if not audio_stream:
         raise Exception("No audio stream returned from Polly.")
-    filename = f"polly_{maori_text.replace(' ', '_').lower()}.mp3"
+    filename = filename_override or f"polly_{maori_text.replace(' ', '_').lower()}.mp3"
     audio_path = os.path.join(AUDIO_DIR, filename)
     with open(audio_path, "wb") as f:
         f.write(audio_stream.read())
