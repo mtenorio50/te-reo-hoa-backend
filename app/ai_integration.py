@@ -1,10 +1,12 @@
-import httpx
-import os
-import json
-import boto3
-# from app.utils import extract_json_from_markdown, sanitize_ai_data
 from dotenv import load_dotenv
-# from app.schemas import NewsItem
+import json
+import os
+
+import boto3
+import httpx
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 load_dotenv()
@@ -37,9 +39,7 @@ async def get_translation(word: str):
 
     Word or phrase: "{word}"
     """
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}]
-    }
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
     headers = {"Content-Type": "application/json"}
     async with httpx.AsyncClient() as client:
         resp = await client.post(API_URL, headers=headers, json=payload)
@@ -75,20 +75,20 @@ async def get_positive_news_from_gemini():
                 raw_text = raw_text[:-3].strip()
             return json.loads(raw_text)
         except Exception as e:
-            print("Failed to parse Gemini response:", e)
-            print("Raw response:", response_json)
+            logger.error("Failed to parse Gemini response:", e)
+            logger.info("Raw response:", response_json)
             raise
 
 
-async def synthesize_maori_audio_with_polly(maori_text, voice_id="Aria", output_format="mp3", filename_override=None):
+async def synthesize_maori_audio_with_polly(
+    maori_text, voice_id="Aria", output_format="mp3", filename_override=None
+):
     response = polly_client.synthesize_speech(
-        Text=maori_text,
-        VoiceId=voice_id,
-        OutputFormat=output_format,
-        Engine="neural"
+        Text=maori_text, VoiceId=voice_id, OutputFormat=output_format, Engine="neural"
     )
     audio_stream = response.get("AudioStream")
     if not audio_stream:
+        logger.error("No audio stream returned from Polly:", audio_stream)
         raise Exception("No audio stream returned from Polly.")
     filename = filename_override or f"polly_{maori_text.replace(' ', '_').lower()}.mp3"
     audio_path = os.path.join(AUDIO_DIR, filename)

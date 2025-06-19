@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Session
-from . import models, schemas
 from datetime import datetime
+
+from sqlalchemy.orm import Session
+
+from app import models, schemas
 
 
 def create_user(db: Session, user: schemas.UserCreate, hashed_pw: str):
@@ -51,21 +53,28 @@ def get_users(db: Session):
     return db.query(models.User).all()
 
 
-def get_words(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Word).offset(skip).limit(limit).all()
+def get_words(db: Session, offset: int = 0, limit: int = 10):
+    return (
+        db.query(models.Word)
+        .order_by(models.Word.text.asc())   # Sort alphabetically
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
 
 def set_word_progress(db: Session, user_id: int, word_id: int, status: str):
-    entry = db.query(models.UserWordProgress).filter_by(
-        user_id=user_id, word_id=word_id
-    ).first()
+    entry = (
+        db.query(models.UserWordProgress)
+        .filter_by(user_id=user_id, word_id=word_id)
+        .first()
+    )
     if entry:
         entry.status = status
         entry.updated_at = datetime.utcnow()
     else:
         entry = models.UserWordProgress(
-            user_id=user_id, word_id=word_id, status=status
-        )
+            user_id=user_id, word_id=word_id, status=status)
         db.add(entry)
     db.commit()
     db.refresh(entry)
@@ -74,14 +83,26 @@ def set_word_progress(db: Session, user_id: int, word_id: int, status: str):
 
 def get_user_progress_stats(db: Session, user_id: int):
     total_words = db.query(models.Word).count()
-    learned = db.query(models.UserWordProgress).filter_by(
-        user_id=user_id, status="learned").count()
-    review = db.query(models.UserWordProgress).filter_by(
-        user_id=user_id, status="review").count()
-    starred = db.query(models.UserWordProgress).filter_by(
-        user_id=user_id, status="starred").count()
-    unlearned = db.query(models.UserWordProgress).filter_by(
-        user_id=user_id, status="unlearned").count()
+    learned = (
+        db.query(models.UserWordProgress)
+        .filter_by(user_id=user_id, status="learned")
+        .count()
+    )
+    review = (
+        db.query(models.UserWordProgress)
+        .filter_by(user_id=user_id, status="review")
+        .count()
+    )
+    starred = (
+        db.query(models.UserWordProgress)
+        .filter_by(user_id=user_id, status="starred")
+        .count()
+    )
+    unlearned = (
+        db.query(models.UserWordProgress)
+        .filter_by(user_id=user_id, status="unlearned")
+        .count()
+    )
     return {
         "learned_count": learned,
         "review_count": review,
@@ -92,9 +113,11 @@ def get_user_progress_stats(db: Session, user_id: int):
 
 
 def get_learned_words_for_user(db: Session, user_id: int):
-    learned_progress = db.query(models.UserWordProgress).filter_by(
-        user_id=user_id, status="learned"
-    ).all()
+    learned_progress = (
+        db.query(models.UserWordProgress)
+        .filter_by(user_id=user_id, status="learned")
+        .all()
+    )
     word_ids = [progress.word_id for progress in learned_progress]
     # Just return the text of each word
     words = db.query(models.Word).filter(models.Word.id.in_(word_ids)).all()

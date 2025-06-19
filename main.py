@@ -1,25 +1,35 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.database import engine
+
 from app import models
+from app.database import engine
+from app.router import login, news, progress, quiz, translate, users, words
 from app.utils import start_scheduler
-from app.router import users, words, progress, quiz, translate, login, news
+
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Change to logging.DEBUG for even more detail
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    handlers=[
+        # Logs to a file in your project root
+        logging.FileHandler("app.log"),
+        logging.StreamHandler()             # Also logs to your terminal/console
+    ]
+)
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Te Reo Hoa API")
 
-origins = [
-    "http://localhost:3000",
-    "https://te-reo-hoa.vercel.com"
-]
+origins = ["http://localhost:3000", "https://te-reo-hoa.vercel.com"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 

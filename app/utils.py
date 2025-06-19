@@ -1,18 +1,22 @@
 # app/utils.py
+from app.router.news import refresh_news_in_db
+from app.database import SessionLocal
+from app.ai_integration import get_positive_news_from_gemini
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.schedulers.background import BackgroundScheduler
+import asyncio
 import json
 import re
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
-from app.database import SessionLocal
-from app.router.news import refresh_news_in_db
-from app.ai_integration import get_positive_news_from_gemini
-import asyncio
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 ALLOWED_LEVELS = ["beginner", "intermediate"]
 
 
 def sanitize_level(ai_level: str) -> str:
-    ai_level = (ai_level or "")
+    ai_level = ai_level or ""
     if ai_level in ALLOWED_LEVELS:
         return ai_level
     return "beginner"  # Or prompt admin to choose
@@ -24,7 +28,7 @@ def extract_json_from_markdown(md_text: str) -> dict:
                    md_text.strip(), flags=re.IGNORECASE)
     clean = re.sub(r"\s*```$", "", clean.strip())
     if not clean or not clean.strip().startswith("{"):
-        print("AI response is not valid JSON:", repr(clean))
+        logger.error("AI response is not valid JSON:", repr(clean))
         raise ValueError("AI did not return valid JSON")
     return json.loads(clean)
 
@@ -48,8 +52,8 @@ def extract_ai_text(result: dict) -> str:
             raise ValueError("No content parts in AI response")
         return content["parts"][0].get("text", "")
     except Exception as e:
-        print("AI response extraction failed:", e)
-        print("Full response:", result)
+        logger.error("AI response extraction failed:", e)
+        logger.info("Full response:", result)
         return ""
 
 
@@ -64,14 +68,14 @@ def news_extract_json_from_markdown(md_text: str) -> str:
 
 
 def scheduled_news_refresh():
-    print("[SCHEDULER] Refreshing daily news...")
+    logger.info("[SCHEDULER] Refreshing daily news...")
     db = SessionLocal()
     try:
         news_array = asyncio.run(get_positive_news_from_gemini())
         added = asyncio.run(refresh_news_in_db(db, news_array))
-        print(f"[SCHEDULER] Added {added} new news stories.")
+        logger.info(f"[SCHEDULER] Added {added} new news stories.")
     except Exception as e:
-        print(f"[SCHEDULER] News refresh failed: {e}")
+        logger.error(f"[SCHEDULER] News refresh failed: {e}")
     finally:
         db.close()
 
@@ -80,4 +84,4 @@ def start_scheduler():  # This scheduler will run 3am daily to get news automati
     scheduler = BackgroundScheduler()
     scheduler.add_job(scheduled_news_refresh, CronTrigger(hour=3, minute=0))
     scheduler.start()
-    print("[SCHEDULER] Started.")
+    logger.info("[SCHEDULER] Started.")

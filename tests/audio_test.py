@@ -1,7 +1,9 @@
-import boto3
 import os
+
+import boto3
 from dotenv import load_dotenv
-load_dotenv('.env')
+
+load_dotenv(".env")
 
 # Make sure your credentials and region are set up
 
@@ -10,10 +12,7 @@ polly_client = boto3.client("polly", region_name="ap-southeast-2")
 
 def synthesize_and_save(text, voice_id="Aria", output_format="mp3"):
     response = polly_client.synthesize_speech(
-        Text=text,
-        VoiceId=voice_id,
-        OutputFormat=output_format,
-        Engine="neural"
+        Text=text, VoiceId=voice_id, OutputFormat=output_format, Engine="neural"
     )
     audio_stream = response.get("AudioStream")
     if not audio_stream:

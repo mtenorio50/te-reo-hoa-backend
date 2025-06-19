@@ -1,8 +1,20 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, Enum, ForeignKey, JSON, UniqueConstraint
-from sqlalchemy.orm import relationship
-from .database import Base
-from datetime import datetime
 import enum
+from datetime import datetime
+
+from sqlalchemy import (
+    JSON,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
+from sqlalchemy.orm import relationship
+
+from .database import Base
 
 
 class User(Base):
@@ -19,15 +31,14 @@ class Word(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String, unique=True, index=True)
     translation = Column(String)
-    level = Column(String)                # e.g., "Beginner", "Intermediate"
-    type = Column(String)                 # e.g., noun, verb, etc.
-    domain = Column(String)               # e.g., greetings, food
-    example = Column(Text)                # Example sentence
-    audio_url = Column(String)            # URL for audio pronunciation
+    level = Column(String)  # e.g., "Beginner", "Intermediate"
+    type = Column(String)  # e.g., noun, verb, etc.
+    domain = Column(String)  # e.g., greetings, food
+    example = Column(Text)  # Example sentence
+    audio_url = Column(String)  # URL for audio pronunciation
     # Lowercased version for dedup/search
     normalized = Column(String, index=True)
-    notes = Column(Text)                  # Cultural/usage notes
-    
+    notes = Column(Text)  # Cultural/usage notes
 
 
 class ProgressStatus(enum.Enum):
@@ -58,4 +69,5 @@ class NewsItem(Base):
     source = Column(String)
     image_urls = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
-    __table_args__ = (UniqueConstraint("source_url", name="uq_news_source_url"),)
+    __table_args__ = (UniqueConstraint(
+        "source_url", name="uq_news_source_url"),)

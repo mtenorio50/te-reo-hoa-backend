@@ -1,39 +1,64 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from typing import List
-from app import schemas, crud, models, ai_integration, auth
+from app.utils import (
+    extract_ai_text,
+    extract_json_from_markdown,
+    sanitize_ai_data,
+    sanitize_level,
+)
 from app.database import get_db
 from app.ai_integration import synthesize_maori_audio_with_polly
-from app.utils import sanitize_level, sanitize_ai_data, extract_json_from_markdown, extract_ai_text
+from app import ai_integration, auth, crud, models, schemas
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Body
+from typing import List
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(tags=["Words"])
 
 
-@router.get("/list", response_model=List[schemas.WordOut])
-def list_words(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user=Depends(auth.require_admin)):
-    return crud.get_words(db, skip=skip, limit=limit)
+@router.get("/list", response_model=List[schemas.WordOut],
+            summary="List words",
+            description="Returns a paginated list of all words in the dictionary. Admin access required.")
+def list_words(
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user=Depends(auth.require_admin),
+):
+    """List all dictionary words (paginated, admin only)."""
+    offset = (page - 1) * limit
+    return crud.get_words(db, offset=offset, limit=limit)
 
 
-@router.post("/add", response_model=schemas.WordOut)
+@router.post("/add", response_model=schemas.WordOut,
+             summary="Add a new word",
+             description="Creates a new word entry. Uses AI to generate translation and details. Admin access required.")
 async def add_word(
     word: schemas.WordCreate,
     db: Session = Depends(get_db),
-    current_user=Depends(auth.require_admin)
+    current_user=Depends(auth.require_admin),
 ):
+    """Add a new Māori word (admin only, AI generated details)."""
     normalized = word.text.strip().lower()
     if crud.get_word_by_normalized(db, normalized):
+        logger.warning("Text already exists for input: %s", normalized)
         raise HTTPException(status_code=400, detail="Text already exists")
     result = await ai_integration.get_translation(word.text)
     raw_ai_text = extract_ai_text(result)
     if not raw_ai_text:
+        logger.warning(
+            "AI did not return a usable response for: %s", raw_ai_text)
         raise HTTPException(
-            status_code=502, detail="AI did not return a usable response.")
+            status_code=502, detail="AI did not return a usable response."
+        )
     try:
         ai_data = extract_json_from_markdown(raw_ai_text)
         ai_data = sanitize_ai_data(ai_data)
     except Exception:
+        logger.error("Failed to parse AI response: %s", ai_data)
         raise HTTPException(
             status_code=502, detail="Failed to parse AI response.")
     ai_data["level"] = sanitize_level(ai_data.get("level"))
@@ -49,7 +74,7 @@ async def add_word(
         filename = await ai_integration.synthesize_maori_audio_with_polly(
             ai_data.get("translation", ""),
             # <--- Use word id as filename!
-            filename_override=f"{db_word.id}.mp3"
+            filename_override=f"{db_word.id}.mp3",
         )
         audio_url = f"/static/audio/{filename}"
         # Step 3: Update db_word with the audio URL
@@ -63,32 +88,99 @@ async def add_word(
     return db_word  # Return the (possibly updated) DB object
 
 
-@router.post("/words/{word_id}/generate_audio_polly", tags=["Words"])
+@router.post("/words/{word_id}/generate_audio_polly", tags=["Words"],
+             summary="Generate word audio with Polly",
+             description="Generates an audio file for the Māori translation using Amazon Polly. Admin access required.")
 async def generate_word_audio_polly(
     word_id: int,
     db: Session = Depends(auth.get_db),
-    current_user=Depends(auth.require_admin)
+    current_user=Depends(auth.require_admin),
 ):
-
+    """Generate Polly audio for a word (admin only)."""
     word = db.query(models.Word).filter_by(id=word_id).first()
     normalized = word.text.strip().lower()
     if crud.get_word_by_normalized(db, normalized):
+        logger.warning("Translation already exists for: %s", normalized)
         raise HTTPException(
-            status_code=400, detail="Trabslation already exists")
+            status_code=400, detail="Translation already exists")
     if not word:
+        logger.warning("Word not found for: %s", normalized)
         raise HTTPException(status_code=404, detail="Word not found.")
     maori_text = word.translation
     if not maori_text:
+        logger.warning(
+            "No translation available for this word: %s", maori_text)
         raise HTTPException(
-            status_code=400, detail="No translation available for this word.")
+            status_code=400, detail="No translation available for this word."
+        )
     try:
         filename = synthesize_maori_audio_with_polly(maori_text)
         word.audio_url = f"/static/audio/{filename}"
         db.commit()
         return {
             "audio_url": word.audio_url,
-            "disclaimer": "Audio generated using Amazon Polly English voice. Māori pronunciation may not be accurate."
+            "disclaimer": "Audio generated using Amazon Polly English voice. Māori pronunciation may not be accurate.",
         }
     except Exception as e:
+        logger.error("Polly audio generation failed for: %s", maori_text)
         raise HTTPException(
-            status_code=500, detail=f"Polly audio generation failed: {e}")
+            status_code=500, detail=f"Polly audio generation failed: {e}"
+        )
+
+
+@router.post(
+    "/batch_add",
+    response_model=schemas.BatchWordResult,
+    tags=["Words"],
+    description="""
+                    **Note:**  
+                    - The recommended batch size is 5–10 words at a time.  
+                    - The maximum allowed is 15 words per batch to be safe.  
+                    - Words that already exist will be skipped and reported in the result."""
+)
+async def batch_add_words(
+    batch: schemas.BatchWordCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(auth.require_admin),
+):
+    added = []
+    skipped = []
+    for text in batch.texts:
+        normalized = text.strip().lower()
+        if crud.get_word_by_normalized(db, normalized):
+            skipped.append(text)
+            logger.info("Skipped (exists): %s", text)
+            continue
+        try:
+            result = await ai_integration.get_translation(text)
+            raw_ai_text = extract_ai_text(result)
+            if not raw_ai_text:
+                logger.warning(
+                    "AI did not return usable response for: %s", text)
+                skipped.append(text)
+                continue
+            ai_data = extract_json_from_markdown(raw_ai_text)
+            ai_data = sanitize_ai_data(ai_data)
+            ai_data["level"] = sanitize_level(ai_data.get("level"))
+            db_word = crud.create_word(
+                db, text, ai_data, ai_data["level"], audio_url=None)
+            db.refresh(db_word)
+            # Optional: Generate audio
+            try:
+                filename = await ai_integration.synthesize_maori_audio_with_polly(
+                    ai_data.get("translation", ""),
+                    filename_override=f"{db_word.id}.mp3",
+                )
+                db_word.audio_url = f"/static/audio/{filename}"
+                db.commit()
+                db.refresh(db_word)
+            except Exception as e:
+                logger.warning("Audio failed for word '%s': %s", text, e)
+            added.append(db_word)
+        except Exception as e:
+            logger.error("Error adding word '%s': %s", text, e)
+            skipped.append(text)
+    return schemas.BatchWordResult(
+        added=added,
+        skipped=skipped
+    )
