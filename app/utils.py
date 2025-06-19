@@ -1,6 +1,12 @@
 # app/utils.py
 import json
 import re
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from app.database import SessionLocal
+from app.router.news import refresh_news_in_db
+from app.ai_integration import get_positive_news_from_gemini
+import asyncio
 
 ALLOWED_LEVELS = ["beginner", "intermediate"]
 
@@ -46,10 +52,32 @@ def extract_ai_text(result: dict) -> str:
         print("Full response:", result)
         return ""
 
+
 def news_extract_json_from_markdown(md_text: str) -> str:
     """
     Strips markdown code fences (``` or ```json) from a string and returns the inner JSON string.
     """
-    clean = re.sub(r"^```(?:json)?\s*", "", md_text.strip(), flags=re.IGNORECASE)
+    clean = re.sub(r"^```(?:json)?\s*", "",
+                   md_text.strip(), flags=re.IGNORECASE)
     clean = re.sub(r"\s*```$", "", clean.strip())
     return clean
+
+
+def scheduled_news_refresh():
+    print("[SCHEDULER] Refreshing daily news...")
+    db = SessionLocal()
+    try:
+        news_array = asyncio.run(get_positive_news_from_gemini())
+        added = asyncio.run(refresh_news_in_db(db, news_array))
+        print(f"[SCHEDULER] Added {added} new news stories.")
+    except Exception as e:
+        print(f"[SCHEDULER] News refresh failed: {e}")
+    finally:
+        db.close()
+
+
+def start_scheduler():  # This scheduler will run 3am daily to get news automatically
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(scheduled_news_refresh, CronTrigger(hour=3, minute=0))
+    scheduler.start()
+    print("[SCHEDULER] Started.")

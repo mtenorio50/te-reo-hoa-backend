@@ -140,3 +140,18 @@ class NewsItem(BaseModel):
 
 class PositiveNewsResponse(BaseModel):
     items: List[NewsItem]
+
+
+class NewsOut(BaseModel):
+    title_english: str
+    title_maori: Optional[str]
+    summary_english: str
+    summary_maori: Optional[str]
+    published_date: str
+    source_url: str
+    source: str
+    image_urls: List[str]
+    created_at: str
+
+    class Config:
+        from_attributes = True

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, Enum, ForeignKey, JSON, UniqueConstraint
 from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
@@ -44,3 +44,18 @@ class UserWordProgress(Base):
     word_id = Column(Integer, ForeignKey("words.id"))
     status = Column(Enum(ProgressStatus), default=ProgressStatus.unlearned)
     updated_at = Column(DateTime, default=datetime.utcnow)
+
+
+class NewsItem(Base):
+    __tablename__ = "news"
+    id = Column(Integer, primary_key=True, index=True)
+    title_english = Column(String)
+    title_maori = Column(String)
+    summary_english = Column(String)
+    summary_maori = Column(String)
+    published_date = Column(DateTime)
+    source_url = Column(String, unique=True)
+    source = Column(String)
+    image_urls = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    __table_args__ = (UniqueConstraint("source_url", name="uq_news_source_url"),)

@@ -14,6 +14,12 @@
 - **AI Integration Optimization**: Refined Gemini API integration with improved response parsing
 - **Audio Generation Pipeline**: AWS Polly integration for Māori pronunciation
 - **Modular Architecture**: Clean router-based organization with separation of concerns
+- **Enhanced News Model**: Added comprehensive NewsItem database model with bilingual support
+- **JSON Field Integration**: Advanced metadata storage with SQLAlchemy JSON columns
+- **Constraint Management**: Implemented unique constraints for data integrity
+- **AI Timeout Optimization**: Extended timeout settings for improved reliability
+- **News Refresh System**: Admin-controlled news content refresh functionality
+
 
 ### 🔧 Recent Technical Improvements
 - **Enhanced Duplicate Detection**: Comprehensive word checking with normalized and exact text matching
@@ -27,6 +33,23 @@
 - **Transaction Management**: Implemented proper database rollback on integrity errors
 - **Response Parsing**: Enhanced AI response extraction with fallback mechanisms
 - **Audio URL Assignment**: Corrected audio file URL generation and database updates
+### 🗄️ **Database Schema Updates**
+- **NewsItem Table**: Complete bilingual news storage with source tracking
+- **UniqueConstraint**: Prevents duplicate news entries by source URL
+- **JSON Column Support**: Enhanced metadata and image URL storage
+- **Index Optimization**: Improved query performance with strategic indexing
+
+### 🔧 **Technical Debt Resolution**
+- ✅ **Import Dependencies**: Fixed missing JSON module imports
+- ✅ **Variable Scoping**: Resolved undefined variable issues in news processing
+- ✅ **Database Constraints**: Enhanced data integrity with proper constraints
+- ✅ **Timeout Configuration**: Optimized AI service interaction timeouts
+
+### 🚀 **Production Enhancements**
+- **News Content Management**: Automated news refresh with admin controls
+- **Bilingual Support**: Full English/Māori content pipeline
+- **Enhanced Error Recovery**: Improved resilience in news processing
+- **Database Optimization**: Advanced indexing and constraint handling
 
 ---
 
@@ -110,6 +133,8 @@
   - Enhanced AI integration reliability
   - Optimized duplicate detection algorithms
   - Added robust transaction management
+  - News functionality enhancement
+  - AI timeout increased
 
 ### June 17, 2025: **Feature Completion Phase**
 - **Focus**: Core feature implementation and API completeness

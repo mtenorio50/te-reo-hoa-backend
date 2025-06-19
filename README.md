@@ -30,6 +30,8 @@ Te Reo Hoa is a comprehensive language learning web application that helps users
 - Curated positive Māori news feed
 - AI-filtered uplifting stories
 - News source integration with image support
+- Automatically fetch news every 3am daily
+- Manual news fetch by admin
 
 ### Technical Features
 - CORS-ready API for frontend integration

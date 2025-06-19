@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.database import engine
 from app import models
+from app.utils import start_scheduler
 from app.router import users, words, progress, quiz, translate, login, news
 
 models.Base.metadata.create_all(bind=engine)
@@ -27,6 +28,7 @@ def read_root():
     return {"message": "Te Reo Hoa Backend(API) is running"}
 
 
+start_scheduler()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(login.router, prefix="/login")
 app.include_router(users.router, prefix="/users")

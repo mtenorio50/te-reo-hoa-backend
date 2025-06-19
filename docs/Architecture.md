@@ -62,6 +62,14 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 - Text processing utilities
 - Level and domain validation
 
+**NewsItem Model**:
+```python
+- id, title_english, title_maori
+- summary_english, summary_maori  
+- published_date, source_url, source
+- image_urls (JSON), created_at
+- Unique constraint on source_url
+
 ### 3. **Data Layer**
 
 **Database Models** (`models.py`):
