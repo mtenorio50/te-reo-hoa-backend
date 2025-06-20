@@ -1,28 +1,76 @@
 from dotenv import load_dotenv
 import json
 import os
-
+import itertools
 import boto3
 import httpx
 import logging
+import asyncio
 
 logger = logging.getLogger(__name__)
 
 
 load_dotenv()
 timeout = httpx.Timeout(240.0, connect=10.0)
+# Load and parse the keys from .env
+GOOGLE_API_KEYS = [
+    key.strip() for key in os.getenv("GOOGLE_AI_API_KEYS", "").split(",") if key.strip()
+]
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_AI_API_KEY")
-GEMINI_MODEL = "gemini-2.5-flash"
-API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GOOGLE_API_KEY}"
+if not GOOGLE_API_KEYS:
+    raise Exception("No Gemini API keys found in environment variables!")
 
+# Create a round-robin iterator
+key_cycle = itertools.cycle(GOOGLE_API_KEYS)
+
+
+def get_next_api_key():
+    return next(key_cycle)
+
+
+# GOOGLE_API_KEY = os.getenv("GOOGLE_AI_API_KEY")
+# GEMINI_MODEL = "gemini-2.5-flash"
+# API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GOOGLE_API_KEYS}"
 
 AUDIO_DIR = "./static/audio/"
 os.makedirs(AUDIO_DIR, exist_ok=True)
 polly_client = boto3.client("polly", region_name="ap-southeast-2")
 
 
-async def get_translation(word: str):
+async def gemini_post(
+    payload: dict,
+    max_retries: int = 3,
+    timeout=httpx.Timeout(240.0, connect=10.0),
+    model: str = "gemini-2.5-flash"
+):
+    headers = {"Content-Type": "application/json"}
+    for attempt in range(1, max_retries + 1):
+        api_key = get_next_api_key()
+        api_url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{model}:generateContent?key={api_key}"
+        )
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                resp = await client.post(api_url, headers=headers, json=payload)
+                resp.raise_for_status()
+                return resp.json()
+        except httpx.ReadTimeout:
+            logger.warning(
+                f"Gemini API timed out on attempt {attempt}/{max_retries} using key {api_key[:5]}...{api_key[-3:]}"
+            )
+        except Exception as e:
+            logger.error(
+                f"Gemini API error on attempt {attempt} using key {api_key[:5]}...{api_key[-3:]}: {e}"
+            )
+        if attempt < max_retries:
+            await asyncio.sleep(2 ** attempt)
+    raise httpx.ReadTimeout(
+        "Gemini API failed after several attempts (key rotation used)."
+    )
+
+
+async def get_translation(word: str, max_retries=3):
     headers = {"Content-Type": "application/json"}
     prompt = f"""
     Translate the following English word or phrase to Māori. For output, return ONLY a raw JSON object with these fields and nothing else:
@@ -41,10 +89,7 @@ async def get_translation(word: str):
     """
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     headers = {"Content-Type": "application/json"}
-    async with httpx.AsyncClient(timeout=timeout) as client:
-        resp = await client.post(API_URL, headers=headers, json=payload)
-        resp.raise_for_status()
-        return resp.json()
+    return await gemini_post(payload, max_retries=max_retries)
 
 
 async def get_positive_news_from_gemini():
@@ -61,23 +106,22 @@ async def get_positive_news_from_gemini():
     )
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     headers = {"Content-Type": "application/json"}
-    async with httpx.AsyncClient(timeout=timeout) as client:
-        resp = await client.post(API_URL, headers=headers, json=payload)
-        resp.raise_for_status()
-        response_json = resp.json()
-        try:
-            raw_text = response_json["candidates"][0]["content"]["parts"][0]["text"]
-            if raw_text.startswith("```json"):
-                raw_text = raw_text.replace("```json", "").strip()
-            if raw_text.startswith("```"):
-                raw_text = raw_text[3:].strip()
-            if raw_text.endswith("```"):
-                raw_text = raw_text[:-3].strip()
-            return json.loads(raw_text)
-        except Exception as e:
-            logger.error("Failed to parse Gemini response:", e)
-            logger.info("Raw response:", response_json)
-            raise
+    try:
+        result = await gemini_post(payload)
+        # Extract the AI's response text (may include markdown code fences)
+        raw_text = result["candidates"][0]["content"]["parts"][0]["text"]
+        # Remove code fences if present
+        if raw_text.startswith("```json"):
+            raw_text = raw_text.replace("```json", "").strip()
+        if raw_text.startswith("```"):
+            raw_text = raw_text[3:].strip()
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3].strip()
+        return json.loads(raw_text)
+    except Exception as e:
+        logger.error("Failed to parse Gemini response: %s", e)
+        logger.info("Raw response: %s", result)
+        raise
 
 
 async def synthesize_maori_audio_with_polly(

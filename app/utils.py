@@ -8,6 +8,7 @@ import asyncio
 import json
 import re
 import logging
+import httpx
 
 logger = logging.getLogger(__name__)
 
