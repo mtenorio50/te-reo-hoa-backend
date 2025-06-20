@@ -22,7 +22,7 @@ logging.basicConfig(
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Te Reo Hoa API")
 
-origins = ["http://localhost:3000", "https://te-reo-hoa.vercel.com"]
+origins = ["http://localhost:3000", "https://te-reo-hoa.vercel.com", 'http://localhost:62674']
 
 app.add_middleware(
     CORSMiddleware,
