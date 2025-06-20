@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 load_dotenv()
-timeout = httpx.Timeout(120.0, connect=10.0)
+timeout = httpx.Timeout(240.0, connect=10.0)
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_AI_API_KEY")
 GEMINI_MODEL = "gemini-2.5-flash"
@@ -41,7 +41,7 @@ async def get_translation(word: str):
     """
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
     headers = {"Content-Type": "application/json"}
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=timeout) as client:
         resp = await client.post(API_URL, headers=headers, json=payload)
         resp.raise_for_status()
         return resp.json()
