@@ -1,8 +1,10 @@
-from datetime import datetime
-
+from datetime import datetime, date
 from sqlalchemy.orm import Session
-
 from app import models, schemas
+
+import random
+
+_word_of_day_cache = {"date": None, "word": None}
 
 
 def create_user(db: Session, user: schemas.UserCreate, hashed_pw: str):
@@ -123,3 +125,27 @@ def get_learned_words_for_user(db: Session, user_id: int):
     words = db.query(models.Word).filter(models.Word.id.in_(word_ids)).all()
     # Return word text and translation as a list of dicts
     return [{"word": word.text, "translation": word.translation} for word in words]
+
+
+def filter_words(db: Session, search_by: str, value: str, offset: int = 0, limit: int = 10):
+    q = db.query(models.Word)
+    if search_by == "word":
+        q = q.filter(models.Word.text.ilike(f"%{value}%"))
+    elif search_by == "level" and value.lower() in ["beginner", "intermediate"]:
+        q = q.filter(models.Word.level.ilike(value))
+    else:
+        return []  # Return empty if search_by or value not supported
+    return q.order_by(models.Word.text.asc()).offset(offset).limit(limit).all()
+
+
+def get_word_of_the_day(db: Session):
+    today = date.today()
+    if _word_of_day_cache["date"] == today and _word_of_day_cache["word"]:
+        return _word_of_day_cache["word"]
+    words = db.query(models.Word).all()
+    if not words:
+        return None
+    word = random.choice(words)
+    _word_of_day_cache["date"] = today
+    _word_of_day_cache["word"] = word
+    return word

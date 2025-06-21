@@ -33,6 +33,50 @@ def list_words(
     return crud.get_words(db, offset=offset, limit=limit)
 
 
+@router.get("/search", response_model=List[schemas.WordOut],
+            summary="Search words by text or level",
+            description="""
+                Search for words in the dictionary by English text (partial match) **or** by level.
+                - `search_by`: "word" or "level"
+                - `value`: for "word", any text; for "level", must be 'beginner' or 'intermediate'
+                - Pagination: `page` and `limit`
+            """)
+def search_words(
+    search_by: str,          # "word" or "level"
+    value: str,              # text to search or level
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user=Depends(auth.get_current_user),
+):
+    """
+    Unified search for words. Example:
+    /words/search?search_by=word&value=learn
+    /words/search?search_by=level&value=beginner
+    """
+    offset = (page - 1) * limit
+    results = crud.filter_words(
+        db, search_by, value, offset=offset, limit=limit)
+    if not results:
+        logger.error("No words found matching your search: %s", value)
+        raise HTTPException(
+            status_code=404, detail="No words found matching your search.")
+    return results
+
+
+@router.get("/word_of_the_day", response_model=schemas.WordOut,
+            summary="Word of the day",
+            description="Returns the word of the day (randomly selected, same word for all users for one day).")
+def word_of_the_day(
+    db: Session = Depends(get_db),
+    current_user=Depends(auth.get_current_user),
+):
+    word = crud.get_word_of_the_day(db)
+    if not word:
+        raise HTTPException(status_code=404, detail="No words in dictionary.")
+    return word
+
+
 @router.post("/add", response_model=schemas.WordOut,
              summary="Add a new word",
              description="Creates a new word entry. Uses AI to generate translation and details. Admin access required.")
