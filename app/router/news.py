@@ -46,7 +46,7 @@ async def refresh_news_in_db(db: Session, news_array):
 @router.get("/", response_model=List[NewsOut], tags=["News"],
             summary="Get latest news",
             description="Returns the latest 10 positive news stories.")
-def get_latest_news(db: Session = Depends(get_db)):
+def get_latest_news(db: Session = Depends(get_db), current_user=Depends(require_admin)):
     """List the 10 most recent news items."""
     return db.query(NewsItem).order_by(NewsItem.published_date.desc()).limit(10).all()
 
