@@ -154,7 +154,7 @@ ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 # Database (optional - defaults to SQLite)
-DATABASE_URL=sqlite:///./te_reo_hoa.db
+DATABASE_URL=sqlite:///./data/te_reo_hoa.db
 ```
 
 ---
