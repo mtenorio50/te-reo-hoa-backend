@@ -15,9 +15,9 @@ router = APIRouter(tags=["Login"])
 @router.post("/", response_model=schemas.Token,
              summary="User login",
              description="Authenticate with email and password. Returns a JWT access token if successful.")
-@router.post("", response_model=schemas.Token,
-             summary="User login (alternative)",
-             description="Authenticate with email and password. Returns a JWT access token if successful.")
+# @router.post("", response_model=schemas.Token,
+#             summary="User login (alternative)",
+#             description="Authenticate with email and password. Returns a JWT access token if successful.")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
