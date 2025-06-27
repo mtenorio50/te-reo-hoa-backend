@@ -1,0 +1,6 @@
+{
+  "default_admin": {
+    "email": "admin2@admin.com",
+    "password": "123456"
+  }
+}
