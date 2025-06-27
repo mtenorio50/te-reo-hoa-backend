@@ -1,9 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app import models
-from app.database import engine
+from app import models, auth
+from app.database import engine, SessionLocal
 from app.router import login, news, progress, quiz, translate, users, words
 from app.utils import start_scheduler
 
@@ -19,7 +22,53 @@ logging.basicConfig(
     ]
 )
 
+logger = logging.getLogger(__name__)
+
+
+def init_default_admin():
+    """Initialize default admin account if it doesn't exist."""
+    db = SessionLocal()
+    try:
+        # Check if any admin user already exists
+        admin_user = db.query(models.User).filter(models.User.role == "admin").first()
+        
+        if admin_user:
+            logger.info("Admin account already exists, skipping default admin creation")
+            return
+        
+        # Check if the specific admin@admin.com account exists
+        existing_user = auth.get_user_by_email(db, "admin@admin.com")
+        
+        if existing_user:
+            # If user exists but is not admin, promote to admin
+            existing_user.role = "admin"
+            db.commit()
+            logger.info("Promoted existing user admin@admin.com to admin role")
+        else:
+            # Create new admin account
+            hashed_password = auth.get_password_hash("123456")
+            admin_user = models.User(
+                email="admin@admin.com",
+                hashed_password=hashed_password,
+                role="admin"
+            )
+            db.add(admin_user)
+            db.commit()
+            logger.info("Created default admin account: admin@admin.com")
+            
+    except Exception as e:
+        logger.error(f"Error creating default admin account: {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+
+# Create database tables
 models.Base.metadata.create_all(bind=engine)
+
+# Initialize default admin account
+init_default_admin()
+
 app = FastAPI(title="Te Reo Hoa API")
 
 origins = ["http://localhost:3000",
