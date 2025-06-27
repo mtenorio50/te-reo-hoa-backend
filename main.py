@@ -10,6 +10,8 @@ from app.database import engine, SessionLocal
 from app.router import login, news, progress, quiz, translate, users, words
 from app.utils import start_scheduler
 
+import json
+import os
 import logging
 
 logging.basicConfig(
@@ -25,36 +27,59 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def load_default_admin_config():
+    """Load default admin configuration from config/settings.json."""
+    config_path = "config/settings.json"
+    try:
+        if not os.path.exists(config_path):
+            logger.warning(f"Config file {config_path} not found, using fallback admin settings")
+            return {"email": "admin@admin.com", "password": "123456"}
+        
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        default_admin = config.get("default_admin", {})
+        if not default_admin.get("email") or not default_admin.get("password"):
+            logger.warning("Invalid admin config in settings.json, using fallback settings")
+            return {"email": "admin@admin.com", "password": "123456"}
+        
+        return default_admin
+    except Exception as e:
+        logger.error(f"Error loading admin config from {config_path}: {e}")
+        return {"email": "admin@admin.com", "password": "123456"}
+
+
 def init_default_admin():
     """Initialize default admin account if it doesn't exist."""
     db = SessionLocal()
     try:
-        # Check if any admin user already exists
-        admin_user = db.query(models.User).filter(models.User.role == "admin").first()
+        # Load admin config from settings.json
+        admin_config = load_default_admin_config()
+        admin_email = admin_config["email"]
+        admin_password = admin_config["password"]
         
-        if admin_user:
-            logger.info("Admin account already exists, skipping default admin creation")
-            return
-        
-        # Check if the specific admin@admin.com account exists
-        existing_user = auth.get_user_by_email(db, "admin@admin.com")
+        # Check if the specific admin account exists
+        existing_user = auth.get_user_by_email(db, admin_email)
         
         if existing_user:
             # If user exists but is not admin, promote to admin
-            existing_user.role = "admin"
-            db.commit()
-            logger.info("Promoted existing user admin@admin.com to admin role")
+            if existing_user.role != "admin":
+                existing_user.role = "admin"
+                db.commit()
+                logger.info(f"Promoted existing user {admin_email} to admin role")
+            else:
+                logger.info(f"Admin account {admin_email} already exists with admin role")
         else:
             # Create new admin account
-            hashed_password = auth.get_password_hash("123456")
+            hashed_password = auth.get_password_hash(admin_password)
             admin_user = models.User(
-                email="admin@admin.com",
+                email=admin_email,
                 hashed_password=hashed_password,
                 role="admin"
             )
             db.add(admin_user)
             db.commit()
-            logger.info("Created default admin account: admin@admin.com")
+            logger.info(f"Created default admin account: {admin_email}")
             
     except Exception as e:
         logger.error(f"Error creating default admin account: {e}")
