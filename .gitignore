@@ -21,3 +21,5 @@ Thumbs.db
 # Cache
 *.log
 *.sqlite3
+
+static/audio/tts_cache
