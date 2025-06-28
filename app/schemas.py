@@ -243,3 +243,30 @@ class TranslationRequest(BaseModel):
 class TranslationResponse(BaseModel):
     """Translation result."""
     translation: str
+
+
+# ---------- TTS (Text-to-Speech) ----------
+
+class TTSRequest(BaseModel):
+    """Input for TTS generation."""
+    text: str
+    voice_id: Optional[str] = "Aria"  # AWS Polly voice ID
+    output_format: Optional[str] = "mp3"
+    
+    @field_validator('text')
+    @classmethod
+    def validate_text(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Text cannot be empty')
+        if len(v.strip()) > 500:  # Reasonable limit for TTS
+            raise ValueError('Text too long (max 500 characters)')
+        return v.strip()
+
+
+class TTSResponse(BaseModel):
+    """Response for TTS generation."""
+    audio_url: str
+    text: str
+    voice_id: str
+    cached: bool = False
+    message: Optional[str] = None

@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app import models, auth
 from app.database import engine, SessionLocal
-from app.router import login, news, progress, quiz, translate, users, words
+from app.router import login, news, progress, quiz, translate, tts, users, words
 from app.utils import start_scheduler
 
 import json
@@ -123,3 +123,4 @@ app.include_router(translate.router, prefix="/translate")
 app.include_router(progress.router, prefix="/progress")
 app.include_router(quiz.router, prefix="/quiz")
 app.include_router(news.router, prefix="/news")
+app.include_router(tts.router, prefix="/tts")
