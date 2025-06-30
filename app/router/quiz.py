@@ -5,62 +5,70 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app import auth, models, schemas
+from app import auth, models, schemas, crud
 from app.database import get_db
 
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["Quiz"])
+user_quiz_sessions = {}
 
 
-@router.get("/next", response_model=schemas.QuizQuestion,
-            summary="Get next quiz question",
-            description="Returns a quiz question based on available words.")
+@router.get("/next", response_model=schemas.QuizQuestion)
 def get_quiz_question(
     db: Session = Depends(get_db), current_user=Depends(auth.get_current_user)
 ):
-    """Get a random quiz question for the user."""
-    words = db.query(models.Word).all()
-    if len(words) < 4:
-        logger.warning("Not enough words for a quiz")
+    stats = crud.get_user_progress_stats(db, current_user.id)
+    if stats["learned_count"] < 10:
+        needed = 10 - stats["learned_count"]
         raise HTTPException(
-            status_code=400, detail="Not enough words for a quiz.")
-    correct_word = random.choice(words)
+            status_code=403,
+            detail=f"You need to learn at least 10 words before taking the quiz. Learn {needed} more words first."
+        )
+
+    learned_words = crud.get_learned_words_for_user(db, current_user.id)
+    if len(learned_words) < 4:
+        raise HTTPException(
+            status_code=400,
+            detail="You need at least 4 learned words to take the quiz."
+        )
+
+    correct_word = random.choice(learned_words)
     correct_translation = correct_word.translation
-    decoy_words = [w for w in words if w.id != correct_word.id]
-    decoys = random.sample(decoy_words, 3)
+    decoys = random.sample([w for w in learned_words if w.id != correct_word.id], 3)
     choices = [w.translation for w in decoys] + [correct_translation]
     random.shuffle(choices)
     correct_index = choices.index(correct_translation)
+
+    # Store choices in session
+    user_quiz_sessions[(current_user.id, correct_word.id)] = choices
+
     return schemas.QuizQuestion(
         word_id=correct_word.id,
         question=f"What is the Māori translation for '{correct_word.text}'?",
         choices=choices,
-        correct_index=correct_index,
+        correct_index=correct_index
     )
 
-
-@router.post("/answer", response_model=schemas.QuizResult,
-             summary="Submit quiz answer",
-             description="Submit an answer to a quiz question and receive the result.")
+@router.post("/answer", response_model=schemas.QuizResult)
 def submit_quiz_answer(
     answer: schemas.QuizAnswerSubmission,
     db: Session = Depends(get_db),
     current_user=Depends(auth.get_current_user),
 ):
-    """Submit an answer to a quiz question."""
+    session_key = (current_user.id, answer.word_id)
+    if session_key not in user_quiz_sessions:
+        raise HTTPException(status_code=400, detail="Quiz session not found or expired.")
+
+    choices = user_quiz_sessions[session_key]
+    if answer.chosen_index < 0 or answer.chosen_index >= len(choices):
+        raise HTTPException(status_code=400, detail="Invalid choice index.")
+
     word = db.query(models.Word).filter_by(id=answer.word_id).first()
     if not word:
-        logger.warning("Word not found for: %s", word)
         raise HTTPException(status_code=404, detail="Word not found.")
-    words = db.query(models.Word).filter(models.Word.id != word.id).all()
-    if len(words) < 3:
-        logger.warning("Not enough words for decoys")
-        raise HTTPException(
-            status_code=400, detail="Not enough words for decoys.")
-    decoys = random.sample(words, 3)
-    choices = [w.translation for w in decoys] + [word.translation]
-    random.shuffle(choices)
-    correct_index = choices.index(word.translation)
-    is_correct = answer.chosen_index == correct_index
-    return schemas.QuizResult(correct=is_correct, correct_answer=word.translation)
+
+    is_correct = choices[answer.chosen_index].strip().lower() == word.translation.strip().lower()
+    del user_quiz_sessions[session_key]  # Optionally remove session after answer
+
+    return schemas.QuizResult(correct=is_correct)
