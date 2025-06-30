@@ -1,71 +1,113 @@
-# Te Reo Hoa Backend API
+# Te Reo Hoa - Language Learning Backend API
 
-Te Reo Hoa is a comprehensive language learning web application that helps users engage with and learn Te Reo Māori. The backend provides a robust FastAPI-based REST API with AI-powered translation, user progress tracking, vocabulary management, and curated news content.
+🌟 **A comprehensive FastAPI backend for English-to-Māori language learning platform**
 
----
-
-## 🌟 Features
-
-### Authentication & User Management
-- JWT-based authentication with OAuth2
-- Role-based access control (admin, staff, learner)
-- User registration and profile management
-- Admin user promotion capabilities
-
-### Vocabulary & Translation
-- AI-powered English-to-Māori translation (Google Gemini API)
-- Comprehensive word/phrase database with metadata
-- Audio pronunciation generation (AWS Polly)
-- Word categorization by level, type, and domain
-- Duplicate detection and normalization
-- Example sentences and cultural notes
-
-### Learning & Progress Tracking
-- User progress tracking (learned, review, starred, unlearned)
-- Personal vocabulary statistics
-- Interactive quiz system with multiple-choice questions
-- Word-of-the-day functionality
-
-### Content & News
-- Curated positive Māori news feed
-- AI-filtered uplifting stories
-- News source integration with image support
-- Automatically fetch news every 3am daily
-- Manual news fetch by admin
-
-### Technical Features
-- CORS-ready API for frontend integration
-- Robust error handling and validation
-- Modular router-based architecture
-- SQLite database with SQLAlchemy ORM
-- Comprehensive test coverage
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
+[![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 
 ---
 
-## 🛠️ Tech Stack
+## 📖 Overview
 
-- **Backend Framework:** FastAPI 
-- **Database:** SQLite (development), PostgreSQL-ready (production)
-- **ORM:** SQLAlchemy with Alembic migrations
-- **Authentication:** OAuth2 with JWT tokens
-- **AI Integration:** Google Gemini API for translation and content filtering
-- **Audio:** AWS Polly for Text-to-Speech
-- **Testing:** Pytest
-- **Development Server:** Uvicorn
-- **Frontend:** Next.js (separate repository)
+Te Reo Hoa is a modern, scalable backend API designed to power an English-to-Māori language learning platform. Built with **FastAPI**, it provides comprehensive features including user management, vocabulary learning, AI-powered translation, text-to-speech conversion, progress tracking, and curated news content.
+
+### ✨ Key Features
+
+- 🔐 **JWT Authentication** - Secure user authentication with role-based access control
+- 🌐 **AI-Powered Translation** - Google Gemini integration for intelligent English-to-Māori translation
+- 🔊 **Text-to-Speech** - AWS Polly integration for Māori pronunciation with intelligent caching
+- 📚 **Vocabulary Management** - Comprehensive word database with learning progress tracking
+- 📰 **Curated News** - Positive news content in both English and Māori
+- 🎯 **Interactive Quizzes** - Assessment functionality for learning progress
+- 📊 **Progress Tracking** - Detailed user learning analytics
+- 🚀 **Auto-Provisioning** - Intelligent database setup with cross-platform compatibility
 
 ---
 
-## � Quick Start
+## 🚀 Latest Updates (June 30, 2025)
+
+### Infrastructure Improvements ✅
+- **Enhanced Database Configuration**: Robust SQLite setup with automatic directory creation
+- **Cross-Platform Compatibility**: Consistent behavior across Windows, macOS, and Linux
+- **Intelligent Error Handling**: Comprehensive database connection error recovery
+- **Environment Configuration**: Streamlined setup with intelligent fallback systems
+- **Login Endpoint Optimization**: Dual-path support resolving 307 redirect issues
+
+### New Features ✅
+- **TTS Caching System**: Intelligent audio file caching for improved performance
+- **Enhanced AI Integration**: Extended timeout handling and improved response parsing
+- **Auto-Provisioning**: Automatic creation of database directories and configuration files
+- **Debug Integration**: Real-time database path and connection status reporting
+
+---
+
+## 🏗️ Architecture
+
+### Project Structure
+
+```
+te-reo-hoa-backend/
+├── 📱 app/                    # Main application package
+│   ├── 🛣️ router/            # API endpoint organization
+│   │   ├── login.py          # Authentication (dual-path support)
+│   │   ├── users.py          # User management endpoints
+│   │   ├── words.py          # Vocabulary management
+│   │   ├── translate.py      # Translation services
+│   │   ├── tts.py            # Text-to-Speech with caching
+│   │   ├── progress.py       # Learning progress tracking
+│   │   ├── quiz.py           # Assessment functionality
+│   │   └── news.py           # News content delivery
+│   ├── models.py             # SQLAlchemy database models
+│   ├── schemas.py            # Pydantic validation schemas
+│   ├── database.py           # Intelligent database configuration
+│   ├── crud.py               # Database operation abstractions
+│   ├── auth.py               # Authentication & authorization
+│   ├── ai_integration.py     # External AI service integrations
+│   └── utils.py              # Shared utility functions
+├── 📊 data/                   # Auto-created database storage
+│   └── te_reo_hoa.db         # SQLite database file
+├── 🔊 static/                 # Static file serving
+│   └── audio/                # Generated pronunciation files
+│       └── tts_cache/        # Cached TTS audio files
+├── ⚙️ config/                # Configuration files
+│   └── settings.json         # Admin and application settings
+├── 📚 docs/                   # Project documentation
+│   ├── Architecture.md       # System architecture guide
+│   └── Progress.md           # Development timeline
+├── 🧪 tests/                  # Test suite
+│   └── test_basic.py         # Basic functionality tests
+├── main.py                   # Application entry point
+├── requirements.txt          # Python dependencies
+└── README.md                 # This file
+```
+
+### Technology Stack
+
+- **Framework**: FastAPI (high-performance async web framework)
+- **Database**: SQLite with SQLAlchemy ORM (auto-provisioning)
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **AI Services**: 
+  - Google Gemini API (translation and content generation)
+  - AWS Polly (Māori text-to-speech synthesis)
+- **Validation**: Pydantic schemas for type safety
+- **Scheduling**: APScheduler for background tasks
+- **Testing**: Pytest with comprehensive coverage
+
+---
+
+## 🛠️ Installation & Setup
 
 ### Prerequisites
-- Python 3.8+
-- Virtual environment (recommended)
-- API keys for Google Gemini and AWS Polly
 
-### Setup Instructions
+- **Python 3.8+** (3.9+ recommended)
+- **pip** (Python package manager)
+- **Virtual Environment** (recommended)
 
-1. **Clone and Navigate**
+### Quick Start
+
+1. **Clone the Repository**
    ```bash
    git clone <repository-url>
    cd te-reo-hoa-backend
@@ -73,10 +115,12 @@ Te Reo Hoa is a comprehensive language learning web application that helps users
 
 2. **Create Virtual Environment**
    ```bash
-   python -m venv venv
    # Windows
+   python -m venv venv
    venv\Scripts\activate
-   # macOS/Linux  
+
+   # macOS/Linux
+   python3 -m venv venv
    source venv/bin/activate
    ```
 
@@ -86,90 +130,177 @@ Te Reo Hoa is a comprehensive language learning web application that helps users
    ```
 
 4. **Environment Configuration**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your API keys and configuration
+   Create a `.env` file in the project root:
+   ```env
+   # Database Configuration
+   SQLALCHEMY_DATABASE_URL=sqlite:///./data/te_reo_hoa.db
+
+   # JWT Configuration
+   SECRET_KEY=your-super-secret-jwt-key-here
+   ALGORITHM=HS256
+   ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+   # Google Gemini API
+   GEMINI_API_KEY=your-google-gemini-api-key
+
+   # AWS Configuration (for TTS)
+   AWS_ACCESS_KEY_ID=your-aws-access-key
+   AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+   AWS_REGION=us-east-1
+
+   # News API (optional)
+   NEWS_API_KEY=your-news-api-key
    ```
 
-5. **Database Setup**
+5. **Start the Application**
    ```bash
-   # Database tables are auto-created on first run
-   python -c "from app.database import engine; from app import models; models.Base.metadata.create_all(bind=engine)"
-   ```
-
-6. **Start Development Server**
-   ```bash
+   # Development mode with auto-reload
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+   # Production mode
+   uvicorn main:app --host 0.0.0.0 --port 8000
    ```
 
-7. **Access API Documentation**
-   - Swagger UI: http://localhost:8000/docs
-   - ReDoc: http://localhost:8000/redoc
+6. **Access the API**
+   - **API Documentation**: http://localhost:8000/docs
+   - **Alternative Docs**: http://localhost:8000/redoc
+   - **Health Check**: http://localhost:8000/
+
+### 🔧 Configuration Notes
+
+#### Database Setup
+- **Auto-Provisioning**: The application automatically creates the `/data` directory and database file
+- **Cross-Platform**: Database paths work consistently across Windows, macOS, and Linux
+- **Fallback System**: Intelligent fallback to default configurations if environment variables are missing
+
+#### Admin Account
+- **Default Admin**: Automatically created on first startup
+- **Configuration**: Modify `config/settings.json` to change default admin credentials
+- **Security**: Change default password immediately in production
 
 ---
 
-## 📁 Project Structure
+## 📚 API Documentation
 
-```
-te-reo-hoa-backend/
-├── app/
-│   ├── router/          # API route modules
-│   │   ├── users.py     # User management
-│   │   ├── words.py     # Vocabulary management  
-│   │   ├── progress.py  # Learning progress
-│   │   ├── quiz.py      # Quiz functionality
-│   │   ├── translate.py # Translation service
-│   │   ├── login.py     # Authentication
-│   │   └── news.py      # News feed
-│   ├── models.py        # Database models
-│   ├── schemas.py       # Pydantic schemas
-│   ├── database.py      # Database configuration
-│   ├── crud.py          # Database operations
-│   ├── auth.py          # Authentication logic
-│   ├── ai_integration.py # AI service integrations
-│   └── utils.py         # Utility functions
-├── tests/               # Test suite
-├── static/              # Static files (audio, etc.)
-├── docs/                # Documentation
-├── main.py              # FastAPI application entry point
-├── requirements.txt     # Python dependencies
-└── README.md           # This file
+### Authentication Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/login/` | User authentication and token generation | ❌ |
+| `POST` | `/users/register` | User registration | ❌ |
+| `GET` | `/users/me` | Get current user profile | ✅ |
+
+### Vocabulary Management
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/words/` | List all vocabulary words | ✅ |
+| `POST` | `/words/add` | Add new vocabulary word | ✅ (Admin) |
+| `PUT` | `/words/{word_id}` | Update existing word | ✅ (Admin) |
+| `DELETE` | `/words/{word_id}` | Delete vocabulary word | ✅ (Admin) |
+
+### Translation Services
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/translate/` | Translate English to Māori | ✅ |
+| `POST` | `/translate/bulk` | Bulk translation of multiple texts | ✅ |
+
+### Text-to-Speech (TTS)
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/tts/tts` | Convert Māori text to speech | ❌ |
+| `GET` | `/tts/audio/{cache_key}` | Direct access to cached audio files | ❌ |
+| `GET` | `/tts/cache/info` | Get TTS cache information | ❌ |
+| `DELETE` | `/tts/cache` | Clear TTS cache | ✅ (Admin) |
+
+### Progress Tracking
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/progress/` | Get user learning progress | ✅ |
+| `POST` | `/progress/update` | Update word learning status | ✅ |
+| `GET` | `/progress/stats` | Get detailed progress statistics | ✅ |
+
+### Quizzes & Assessment
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/quiz/generate` | Generate personalized quiz | ✅ |
+| `POST` | `/quiz/submit` | Submit quiz answers | ✅ |
+| `GET` | `/quiz/history` | Get quiz history | ✅ |
+
+### News Content
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/news/` | Get curated positive news | ✅ |
+| `GET` | `/news/{news_id}` | Get specific news article | ✅ |
+
+---
+
+## 🔐 Authentication & Security
+
+### JWT Token Authentication
+- **Algorithm**: HS256
+- **Expiration**: Configurable (default: 30 minutes)
+- **Refresh**: Automatic token refresh mechanism
+- **Roles**: `admin` and `learner` role-based access control
+
+### Security Features
+- **Password Hashing**: Bcrypt with salt for secure password storage
+- **CORS Protection**: Configurable CORS middleware for frontend integration
+- **Input Validation**: Comprehensive Pydantic schema validation
+- **SQL Injection Prevention**: SQLAlchemy ORM parameterization
+- **Role-Based Access**: Granular permission control for different user types
+
+### Usage Example
+```bash
+# Login to get token
+curl -X POST "http://localhost:8000/login/" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=admin@admin.com&password=123456"
+
+# Use token in subsequent requests
+curl -X GET "http://localhost:8000/words/" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
 ---
 
-## 🔧 Configuration
+## 🤖 AI Integration
 
-### Required Environment Variables
+### Google Gemini API
+- **Translation**: Intelligent English-to-Māori translation with context awareness
+- **Content Generation**: AI-powered content creation for learning materials
+- **Extended Timeout**: 120-second timeout handling for complex requests
+- **Response Parsing**: Intelligent JSON parsing with fallback mechanisms
+
+### AWS Polly Text-to-Speech
+- **Voice**: High-quality Māori pronunciation using Aria voice
+- **Caching**: Intelligent audio file caching to reduce API costs
+- **Formats**: MP3 audio output with configurable quality
+- **Static Serving**: Direct audio file access through static file middleware
+
+### Configuration
 ```env
-# AI Services
-GEMINI_API_KEY=your_gemini_api_key_here
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+# Required for AI features
+GEMINI_API_KEY=your-google-gemini-api-key
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
 AWS_REGION=us-east-1
-
-# Authentication
-SECRET_KEY=your_jwt_secret_key_here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# Database (optional - defaults to SQLite)
-DATABASE_URL=sqlite:///./data/te_reo_hoa.db
 ```
-
----
-
-## 📚 Documentation
-
-- [Architecture Overview](./docs/Architecture.md) - System design and component details
-- [Progress Log](./docs/Progress.md) - Development updates and milestones
-- [API Documentation](http://localhost:8000/docs) - Interactive Swagger UI (when running)
 
 ---
 
 ## 🧪 Testing
 
+### Running Tests
 ```bash
+# Install test dependencies
+pip install pytest pytest-asyncio pytest-cov
+
 # Run all tests
 pytest
 
@@ -180,59 +311,193 @@ pytest --cov=app tests/
 pytest tests/test_basic.py -v
 ```
 
+### Test Structure
+- **Unit Tests**: Individual component testing
+- **Integration Tests**: API endpoint testing
+- **Database Tests**: Database operation validation
+- **Authentication Tests**: Security mechanism verification
+
 ---
 
-## 🌐 Deployment
+## 🚀 Deployment
 
-### Development
+### Development Deployment
 ```bash
+# Start with auto-reload
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Production
-```bash
-# Using Gunicorn (recommended)
-gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+### Production Deployment
 
-# Or direct Uvicorn
-uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+#### Using Gunicorn
+```bash
+# Install Gunicorn
+pip install gunicorn[standard]
+
+# Start with multiple workers
+gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
-### Docker Support
+#### Using Docker (Recommended)
 ```dockerfile
-# Basic Dockerfile example
-FROM python:3.9
+FROM python:3.9-slim
+
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+
 COPY . .
+EXPOSE 8000
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+#### Environment Variables for Production
+```env
+# Production database (consider PostgreSQL)
+SQLALCHEMY_DATABASE_URL=sqlite:///./data/te_reo_hoa.db
+
+# Strong secret key
+SECRET_KEY=your-strong-production-secret-key
+
+# Production API keys
+GEMINI_API_KEY=your-production-gemini-key
+AWS_ACCESS_KEY_ID=your-production-aws-key
+AWS_SECRET_ACCESS_KEY=your-production-aws-secret
 ```
 
 ---
 
-## 🤝 Contributing
+## 📊 Performance & Monitoring
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Built-in Features
+- **Comprehensive Logging**: Structured logging with file and console output
+- **Database Connection Monitoring**: Real-time connection status and path validation
+- **AI Service Monitoring**: Request/response tracking for external services
+- **Performance Metrics**: Response time tracking and resource usage monitoring
+
+### Monitoring Endpoints
+- **Health Check**: `GET /` - Basic application health
+- **Cache Info**: `GET /tts/cache/info` - TTS cache statistics
+- **Database Status**: Built-in database connection monitoring
+
+### Log Files
+- **Application Logs**: `app.log` (in project root)
+- **Error Tracking**: Comprehensive error logging with stack traces
+- **Performance Logs**: Request timing and resource usage
+
+---
+
+## 🛠️ Development
+
+### Code Quality
+- **Formatting**: Black code formatter
+- **Type Hints**: Comprehensive type annotations
+- **Documentation**: Automatic OpenAPI/Swagger documentation
+- **Error Handling**: Comprehensive exception handling with meaningful messages
+
+### Development Tools
+```bash
+# Code formatting
+black .
+
+# Type checking
+mypy app/
+
+# Linting
+flake8 app/
+
+# Security scanning
+bandit -r app/
+```
+
+### Contributing Guidelines
+1. **Fork the repository**
+2. **Create feature branch**: `git checkout -b feature/new-feature`
+3. **Write tests** for new functionality
+4. **Format code**: `black .`
+5. **Run tests**: `pytest`
+6. **Submit pull request**
+
+---
+
+## 📋 Troubleshooting
+
+### Common Issues
+
+#### Database Connection Errors
+```bash
+# Error: unable to open database file
+# Solution: Check database path and permissions
+```
+- **Auto-Fix**: The application automatically creates missing directories
+- **Manual Fix**: Ensure `/data` directory exists with write permissions
+- **Debug**: Check logs for database path resolution details
+
+#### TTS Cache Issues
+```bash
+# Error: Failed to generate audio
+# Solution: Check AWS credentials and cache directory
+```
+- **Cache Clear**: Use `DELETE /tts/cache` endpoint (admin required)
+- **Directory Check**: Ensure `./static/audio/tts_cache/` exists
+- **AWS Config**: Verify AWS credentials and region settings
+
+#### Authentication Problems
+```bash
+# Error: 401 Unauthorized
+# Solution: Check JWT token and expiration
+```
+- **Token Refresh**: Re-authenticate to get new token
+- **Admin Access**: Ensure user has appropriate role
+- **Secret Key**: Verify SECRET_KEY environment variable
+
+### Debug Mode
+```bash
+# Enable debug logging
+export LOG_LEVEL=DEBUG
+uvicorn main:app --reload --log-level debug
+```
+
+---
+
+## 📞 Support & Contact
+
+### Documentation
+- **Architecture Guide**: [`docs/Architecture.md`](docs/Architecture.md)
+- **Development Progress**: [`docs/Progress.md`](docs/Progress.md)
+- **API Documentation**: http://localhost:8000/docs (when running)
+
+### Support Channels
+- **Issues**: GitHub Issues for bug reports and feature requests
+- **Development**: Check `docs/Progress.md` for current development status
+- **Configuration**: Refer to this README for setup and configuration guidance
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is part of the MSE800 Post School Education program at YooBee Colleges.
 
 ---
 
-## 🎯 Roadmap
+## 🔄 Changelog
 
-- [ ] Enhanced quiz types (translation, audio recognition)
-- [ ] Spaced repetition algorithm
-- [ ] Advanced progress analytics  
-- [ ] Mobile app integration
-- [ ] Community features (user-generated content)
-- [ ] Offline functionality support
-- [ ] Multi-dialect Māori support
+### Version 1.0 (June 30, 2025)
+- ✅ **Infrastructure Improvements**: Enhanced database configuration and auto-provisioning
+- ✅ **TTS Integration**: Complete text-to-speech functionality with intelligent caching
+- ✅ **Cross-Platform Support**: Consistent behavior across Windows, macOS, and Linux
+- ✅ **Enhanced Documentation**: Comprehensive architecture and setup documentation
+- ✅ **Error Handling**: Robust error recovery and debugging capabilities
+- ✅ **Login Optimization**: Dual-path endpoint support for better compatibility
+
+### Previous Versions
+- **v0.9**: Core API functionality with basic authentication
+- **v0.8**: AI integration with Google Gemini and AWS Polly
+- **v0.7**: Database models and CRUD operations
+- **v0.6**: Initial FastAPI setup and project structure
+
+---
+
+*Last Updated: June 30, 2025*  
+*Status: Production Ready with Enhanced Infrastructure*
