@@ -1,27 +1,55 @@
-# Python-specific
+# Python bytecode
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 
-# Env & secrets
+# Environment
 .env
+.venv/
+venv/
+env/
+ENV/
 *.env
-*.key
-*.pem
-*.json  # use with caution if you store API keys as JSON
 
-# OS junk
+# SQLite & other DBs
+*.sqlite3
+*.db
+/data/
+instance/
+
+# Logs
+*.log
+app.log
+
+# Cache, test, and temp files
+*.pid
+*.log
+*.pot
+*.mo
+*.swp
 .DS_Store
-Thumbs.db
+*.tmp
+*.bak
 
-# IDE/Editor
+# Static/Media (if generated, not source)
+static/audio/
+static/uploads/
+
+# VSCode/IDE/Editor configs
 .vscode/
 .idea/
+*.sublime-workspace
+*.sublime-project
 
-# Cache
-*.log
-*.sqlite3
+# Jupyter and IPython
+.ipynb_checkpoints
 
-static/audio/tts_cache
+# OS files
+Thumbs.db
+.DS_Store
 
-*.db
+# AWS credentials (never commit these!)
+.aws/
+
+# Migrations (if using Alembic and don't want them tracked)
+# migrations/
