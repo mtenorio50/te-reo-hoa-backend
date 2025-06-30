@@ -26,9 +26,9 @@ def list_words(
     page: int = 1,
     limit: int = 10,
     db: Session = Depends(get_db),
-    current_user=Depends(auth.require_admin),
+    current_user=Depends(auth.get_current_user),
 ):
-    """List all dictionary words (paginated, admin only)."""
+    """List all dictionary words (paginated, all authenticated users)."""
     offset = (page - 1) * limit
     return crud.get_words(db, offset=offset, limit=limit)
 
