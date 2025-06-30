@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, ConfigDict
 
 # ---------- User ----------
 
@@ -20,8 +20,7 @@ class UserOut(BaseModel):
     email: EmailStr
     role: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ---------- Auth ----------
@@ -49,8 +48,7 @@ class WordBase(BaseModel):
     normalized: str
     notes: Optional[str] = ""
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WordCreate(WordBase):
@@ -63,36 +61,7 @@ class WordOut(WordBase):
     id: int
     normalized: str
 
-    class Config:
-        from_attributes = True
-
-
-"""
-class WordOut(BaseModel):
-    id: int
-    text: str
-    level: str
-    translation: Optional[str] = ""
-    type: Optional[str] = ""
-    domain: Optional[str] = ""
-    example: Optional[str] = ""
-    audio_url: Optional[str] = ""
-    normalized: str
-    notes: Optional[str] = ""
-
-    class Config:
-        from_attributes = True
-
-
-class LevelEnum(str, Enum):
-    beginner = "Basic"
-    intermediate = "Intermediate"
-
-
-class WordCreate(BaseModel):
-    
-    text: str
-"""
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BatchWordCreate(BaseModel):
@@ -157,12 +126,14 @@ class QuizAnswerSubmission(BaseModel):
     """Input for quiz answer submission."""
     word_id: int
     chosen_index: int
+    
+    
 
 
 class QuizResult(BaseModel):
     """Result of quiz answer."""
     correct: bool
-    correct_answer: str
+    
 
 
 # ---------- News ----------
@@ -224,8 +195,7 @@ class NewsOut(BaseModel):
             return []
         return v
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BatchDeleteRequest(BaseModel):
@@ -252,7 +222,7 @@ class TTSRequest(BaseModel):
     text: str
     voice_id: Optional[str] = "Aria"  # AWS Polly voice ID
     output_format: Optional[str] = "mp3"
-    
+
     @field_validator('text')
     @classmethod
     def validate_text(cls, v):

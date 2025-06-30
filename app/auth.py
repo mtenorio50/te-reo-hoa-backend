@@ -69,13 +69,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
 
 def require_admin(current_user: User = Depends(get_current_user)):
     if current_user.role != "admin":
-        logger.warning("Admin only", current_user)
+        logger.warning("Admin only")
         raise HTTPException(status_code=403, detail="Admin only")
     return current_user
 
 
 def get_admin_user(current_user: User = Depends(get_current_user)):
     if current_user.role != "admin":
-        logger.warning("Admin only", current_user)
+        logger.warning("Admin only")
         raise HTTPException(status_code=403, detail="Admin only")
     return current_user
