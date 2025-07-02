@@ -31,10 +31,6 @@ app.log
 *.tmp
 *.bak
 
-# Static/Media (if generated, not source)
-static/audio/
-static/uploads/
-
 # VSCode/IDE/Editor configs
 .vscode/
 .idea/

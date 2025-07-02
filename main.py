@@ -85,7 +85,7 @@ def init_default_admin():
         logger.error(f"Error creating default admin account: {e}")
         db.rollback()
     finally:
-        db.close()
+        db.close() 
 
 
 # Create database tables
