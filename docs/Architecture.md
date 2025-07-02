@@ -4,8 +4,8 @@
 
 Te Reo Hoa is a comprehensive language learning platform focused on English-to-Māori translation, vocabulary management, user progress tracking, and AI-powered content delivery. The architecture follows a modern, modular design with clear separation of concerns, scalable components, and robust error handling.
 
-**Current Version**: v1.0 - Production Ready Backend  
-**Last Updated**: June 30, 2025
+**Current Version**: v1.1 - Enhanced Production Backend with PostgreSQL Migration  
+**Last Updated**: July 2, 2025
 
 ---
 
@@ -21,7 +21,25 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 
 ---
 
-## 🚀 **Recent Architecture Enhancements (June 30, 2025)**
+## 🚀 **Recent Architecture Enhancements (July 2, 2025)**
+
+### **Database Migration & Production Scaling**
+- **PostgreSQL Integration**: Successfully migrated from SQLite to PostgreSQL for enhanced scalability
+- **Cloud Database**: Supabase PostgreSQL integration for production-grade data management
+- **Dual Database Support**: Maintained SQLite for development while using PostgreSQL for production
+- **Enhanced Performance**: Improved query performance and connection pooling with PostgreSQL
+- **Testing Infrastructure**: Comprehensive test suite with 9 specialized test modules
+
+### **Production Readiness Improvements**
+- **Cloud Integration**: Seamless Supabase PostgreSQL connection with secure authentication
+- **Test Coverage**: Advanced testing framework covering all major functionality areas
+- **Database Optimization**: Enhanced connection management and transaction handling
+- **Scalability**: Production-ready database architecture for high-availability deployment
+- **Configuration Management**: Dual-environment configuration supporting both development and production
+
+---
+
+## 🚀 **Previous Architecture Enhancements (June 30, 2025)**
 
 ### **Infrastructure Improvements**
 - **Enhanced Database Layer**: Robust SQLite configuration with automatic directory creation
@@ -90,11 +108,11 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 ### 3. **Data Layer**
 
 **Database Configuration** (`database.py`):
-- Intelligent SQLite setup with automatic directory creation
-- Cross-platform path resolution
-- Environment variable handling with fallbacks
-- Real-time connection status monitoring
-- Debug logging for troubleshooting
+- **PostgreSQL Production Database**: Supabase cloud integration for scalable data management
+- **Dual Database Support**: SQLite for development, PostgreSQL for production environments
+- **Enhanced Connection Management**: Advanced connection pooling and transaction handling
+- **Cloud Database Security**: Secure authentication and encrypted connections
+- **Cross-Platform Compatibility**: Consistent behavior across development and production environments
 
 **Database Models** (`models.py`):
 ```python
@@ -115,6 +133,12 @@ NewsItem:
 - published_date, source_url, source
 - image_urls (JSON), created_at
 ```
+
+**Database Architecture**:
+- **Production**: PostgreSQL on Supabase with advanced features and scalability
+- **Development**: SQLite with auto-provisioning for local development
+- **Testing**: Isolated test database configuration for comprehensive testing
+- **Migration**: Seamless migration path from SQLite to PostgreSQL
 
 **Schemas** (`schemas.py`):
 - Pydantic models for request/response validation
@@ -160,15 +184,33 @@ NewsItem:
 
 ### Enhanced Database Architecture
 
-**File Structure**:
+**Database Infrastructure**:
 ```
 te-reo-hoa-backend/
-├── data/                    # Auto-created database directory
-│   └── te_reo_hoa.db       # SQLite database file
-├── app/
-│   └── database.py         # Enhanced configuration
-└── .env                    # Environment configuration
+├── Production Environment:        # PostgreSQL on Supabase
+│   └── Supabase PostgreSQL        # Cloud-hosted production database
+├── Development Environment:       # SQLite with auto-provisioning
+│   ├── data/                      # Auto-created database directory
+│   └── te_reo_hoa.db             # Local SQLite database file
+├── Testing Environment:           # Isolated test database
+│   └── test.db                    # Dedicated test database
+└── app/
+    └── database.py                # Dual-database configuration
 ```
+
+### Database Configuration Management
+
+**Production Configuration**:
+- **Primary Database**: PostgreSQL on Supabase cloud infrastructure
+- **Connection String**: `POSTGRE_SQLALCHEMY_DATABASE_URL` environment variable
+- **Features**: Advanced PostgreSQL features, connection pooling, cloud backup
+- **Scalability**: High-availability setup with automatic scaling
+
+**Development Configuration**:
+- **Local Database**: SQLite with auto-provisioning
+- **Connection String**: `SQLALCHEMY_DATABASE_URL` for local development
+- **Features**: Automatic directory creation, cross-platform compatibility
+- **Development Experience**: Zero-configuration setup for new developers
 
 ### Entity Relationship Diagram
 
@@ -395,34 +437,35 @@ Production Server
 ## 📊 Architecture Quality Metrics
 
 ### **Current Architecture Statistics**
-- **API Endpoints**: 15 endpoints with dual-path support
-- **Database Models**: 4 comprehensive models with auto-provisioning
-- **Configuration Management**: Intelligent environment handling with fallbacks
-- **Cross-Platform Support**: Windows, macOS, and Linux compatibility
-- **Error Recovery**: Enhanced debugging and troubleshooting capabilities
-- **Developer Experience**: Streamlined setup with automatic configuration
+- **API Endpoints**: 15 endpoints with comprehensive testing coverage
+- **Database Models**: 4 comprehensive models optimized for PostgreSQL
+- **Database Backend**: PostgreSQL on Supabase with enhanced performance
+- **Test Coverage**: 9 specialized test modules covering all major functionality
+- **Configuration Management**: Dual-environment database support (PostgreSQL/SQLite)
+- **Cloud Integration**: Supabase PostgreSQL with secure cloud-based data management
+- **Authentication System**: Advanced JWT implementation with comprehensive test validation
 
 ### **Architecture Principles Achieved**
-- ✅ **Modularity**: Clean router-based organization
-- ✅ **Scalability**: Database-agnostic with auto-provisioning
-- ✅ **Reliability**: Comprehensive error handling and recovery
-- ✅ **Security**: Role-based access with dual-path endpoint support
-- ✅ **Maintainability**: Clear separation of concerns and documentation
-- ✅ **Extensibility**: Plugin-ready AI and service integrations
-- ✅ **Cross-Platform**: Consistent behavior across operating systems
-- ✅ **Developer-Friendly**: Intelligent configuration and setup automation
+- ✅ **Modularity**: Clean router-based organization with comprehensive testing
+- ✅ **Scalability**: PostgreSQL migration for production-grade performance
+- ✅ **Reliability**: Comprehensive error handling and recovery with test validation
+- ✅ **Security**: Role-based access with complete authentication testing
+- ✅ **Maintainability**: Clear separation of concerns and comprehensive documentation
+- ✅ **Extensibility**: Plugin-ready AI and service integrations with test coverage
+- ✅ **Production Ready**: Cloud database integration with Supabase PostgreSQL
+- ✅ **Test Coverage**: 9 specialized test modules ensuring system reliability
 
 ---
 
 ## 📞 Architecture Support
 
-**System Architecture**: Modular FastAPI with intelligent configuration  
-**Database Layer**: Auto-provisioning SQLite with cross-platform support  
-**Integration Layer**: Enhanced AI services with extended timeout handling  
-**Security Model**: JWT-based authentication with dual-path endpoint support  
+**System Architecture**: Modular FastAPI with PostgreSQL cloud database integration  
+**Database Layer**: Production PostgreSQL on Supabase with development SQLite support  
+**Integration Layer**: Enhanced AI services with comprehensive test coverage  
+**Security Model**: JWT-based authentication with complete testing validation  
 
 ---
 
-*Architecture Document Version: 2.0*  
-*Last Updated: June 30, 2025*  
-*Status: Production Ready with Enhanced Infrastructure*
+*Architecture Document Version: 2.1*  
+*Last Updated: July 2, 2025*  
+*Status: Production Ready with PostgreSQL Migration and Enhanced Testing*

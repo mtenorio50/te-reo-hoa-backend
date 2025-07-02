@@ -1,9 +1,10 @@
 # Te Reo Hoa - Language Learning Backend API
 
-🌟 **A comprehensive FastAPI backend for English-to-Māori language learning platform**
+🌟 **A comprehensive FastAPI backend for English-to-Māori language learning platform with PostgreSQL database**
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
+[![PostgreSQL](https://img.shields.io/badge/postgresql-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 [![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 
@@ -11,7 +12,7 @@
 
 ## 📖 Overview
 
-Te Reo Hoa is a modern, scalable backend API designed to power an English-to-Māori language learning platform. Built with **FastAPI**, it provides comprehensive features including user management, vocabulary learning, AI-powered translation, text-to-speech conversion, progress tracking, and curated news content.
+Te Reo Hoa is a modern, scalable backend API designed to power an English-to-Māori language learning platform. Built with **FastAPI** and **PostgreSQL**, it provides comprehensive features including user management, vocabulary learning, AI-powered translation, text-to-speech conversion, progress tracking, and curated news content.
 
 ### ✨ Key Features
 
@@ -23,10 +24,29 @@ Te Reo Hoa is a modern, scalable backend API designed to power an English-to-Mā
 - 🎯 **Interactive Quizzes** - Assessment functionality for learning progress
 - 📊 **Progress Tracking** - Detailed user learning analytics
 - 🚀 **Auto-Provisioning** - Intelligent database setup with cross-platform compatibility
+- 🗃️ **PostgreSQL Integration** - Production-grade database with Supabase cloud hosting
+- 🧪 **Comprehensive Testing** - Advanced test suite with 9 specialized test modules
 
 ---
 
-## 🚀 Latest Updates (June 30, 2025)
+## 🚀 Latest Updates (July 2, 2025)
+
+### Database Migration & Production Enhancement ✅
+- **PostgreSQL Migration**: Successfully migrated to PostgreSQL for enhanced scalability and performance
+- **Supabase Integration**: Cloud-based PostgreSQL database with secure authentication and backup
+- **Dual Database Support**: PostgreSQL for production, SQLite for development environments
+- **Enhanced Testing**: Comprehensive test suite with 9 specialized modules covering all functionality
+- **Production Readiness**: Advanced database configuration for high-availability deployment
+
+### Testing Infrastructure ✅
+- **Comprehensive Test Coverage**: 9 specialized test modules including authentication, AI integration, and search functionality
+- **Test Isolation**: Dedicated test database configuration preventing development data interference
+- **Advanced Testing**: Mock handling for AI services and comprehensive endpoint validation
+- **Quality Assurance**: Enhanced reliability through systematic testing of all major features
+
+---
+
+## 🚀 Previous Updates (June 30, 2025)
 
 ### Infrastructure Improvements ✅
 - **Enhanced Database Configuration**: Robust SQLite setup with automatic directory creation
@@ -66,8 +86,9 @@ te-reo-hoa-backend/
 │   ├── auth.py               # Authentication & authorization
 │   ├── ai_integration.py     # External AI service integrations
 │   └── utils.py              # Shared utility functions
-├── 📊 data/                   # Auto-created database storage
-│   └── te_reo_hoa.db         # SQLite database file
+├── 📊 data/                   # Database storage (environment-dependent)
+│   ├── te_reo_hoa.db         # SQLite database file (development)
+│   └── postgresql://         # PostgreSQL connection (production)
 ├── 🔊 static/                 # Static file serving
 │   └── audio/                # Generated pronunciation files
 │       └── tts_cache/        # Cached TTS audio files
@@ -76,8 +97,16 @@ te-reo-hoa-backend/
 ├── 📚 docs/                   # Project documentation
 │   ├── Architecture.md       # System architecture guide
 │   └── Progress.md           # Development timeline
-├── 🧪 tests/                  # Test suite
-│   └── test_basic.py         # Basic functionality tests
+├── 🧪 tests/                  # Comprehensive test suite
+│   ├── test_ai_function.py   # AI integration testing
+│   ├── test_connection.py    # Database connectivity testing
+│   ├── test_endpoint_auth.py # Authentication testing
+│   ├── test_listing_words.py # Word listing functionality
+│   ├── test_login.py         # Login system testing
+│   ├── test_search_words.py  # Search functionality testing
+│   ├── test_user_regsiter.py # User registration testing
+│   ├── test_WOTD.py          # Word of the Day testing
+│   └── conftest.py           # Test configuration
 ├── main.py                   # Application entry point
 ├── requirements.txt          # Python dependencies
 └── README.md                 # This file
@@ -86,7 +115,7 @@ te-reo-hoa-backend/
 ### Technology Stack
 
 - **Framework**: FastAPI (high-performance async web framework)
-- **Database**: SQLite with SQLAlchemy ORM (auto-provisioning)
+- **Database**: PostgreSQL with Supabase cloud hosting (production) / SQLite (development)
 - **Authentication**: JWT tokens with bcrypt password hashing
 - **AI Services**: 
   - Google Gemini API (translation and content generation)
@@ -132,7 +161,10 @@ te-reo-hoa-backend/
 4. **Environment Configuration**
    Create a `.env` file in the project root:
    ```env
-   # Database Configuration
+   # Database Configuration (Production)
+   POSTGRE_SQLALCHEMY_DATABASE_URL=postgresql://username:password@host:port/database
+
+   # Database Configuration (Development - Optional)
    SQLALCHEMY_DATABASE_URL=sqlite:///./data/te_reo_hoa.db
 
    # JWT Configuration
@@ -169,9 +201,15 @@ te-reo-hoa-backend/
 ### 🔧 Configuration Notes
 
 #### Database Setup
-- **Auto-Provisioning**: The application automatically creates the `/data` directory and database file
-- **Cross-Platform**: Database paths work consistently across Windows, macOS, and Linux
-- **Fallback System**: Intelligent fallback to default configurations if environment variables are missing
+- **Production Database**: PostgreSQL on Supabase for scalable, cloud-based data management
+- **Development Database**: SQLite with auto-provisioning for local development
+- **Dual Configuration**: Supports both PostgreSQL and SQLite through environment variables
+- **Migration Path**: Seamless migration from SQLite development to PostgreSQL production
+
+#### Database Configuration Options
+- **Primary (Production)**: Use `POSTGRE_SQLALCHEMY_DATABASE_URL` for PostgreSQL
+- **Secondary (Development)**: Use `SQLALCHEMY_DATABASE_URL` for SQLite
+- **Auto-Detection**: System automatically detects and uses the appropriate database configuration
 
 #### Admin Account
 - **Default Admin**: Automatically created on first startup
@@ -307,15 +345,21 @@ pytest
 # Run with coverage
 pytest --cov=app tests/
 
-# Run specific test file
-pytest tests/test_basic.py -v
+# Run specific test modules
+pytest tests/test_ai_function.py -v        # AI integration tests
+pytest tests/test_connection.py -v        # Database connection tests
+pytest tests/test_endpoint_auth.py -v     # Authentication tests
+pytest tests/test_login.py -v             # Login functionality tests
+pytest tests/test_search_words.py -v      # Search functionality tests
 ```
 
 ### Test Structure
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: API endpoint testing
-- **Database Tests**: Database operation validation
-- **Authentication Tests**: Security mechanism verification
+- **Unit Tests**: Individual component testing across 9 specialized modules
+- **Integration Tests**: API endpoint testing with authentication validation
+- **Database Tests**: Connection and transaction testing for both PostgreSQL and SQLite
+- **Authentication Tests**: Complete security mechanism verification
+- **AI Integration Tests**: External service testing with mock responses
+- **Search Tests**: Word search and discovery functionality validation
 
 ---
 
@@ -354,7 +398,10 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 #### Environment Variables for Production
 ```env
-# Production database (consider PostgreSQL)
+# Production database (required)
+POSTGRE_SQLALCHEMY_DATABASE_URL=postgresql://username:password@host:port/database
+
+# Development database (optional)
 SQLALCHEMY_DATABASE_URL=sqlite:///./data/te_reo_hoa.db
 
 # Strong secret key
