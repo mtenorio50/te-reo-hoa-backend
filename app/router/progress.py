@@ -56,4 +56,4 @@ def get_learned_words(
 ):
     """List all words the user has learned."""
     words = crud.get_learned_words_for_user(db, current_user.id)
-    return words
+    return [schemas.LearnedWord(word=w.text, translation=w.translation) for w in words]
