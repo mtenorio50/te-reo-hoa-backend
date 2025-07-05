@@ -40,11 +40,12 @@ class WordBase(BaseModel):
     id: int
     text: str
     translation: Optional[str] = ""
+    ipa: Optional[str] = ""
+    phonetic: Optional[str] = ""
     level: Optional[str] = ""
     type: Optional[str] = ""
     domain: Optional[str] = ""
     example: Optional[str] = ""
-    audio_url: Optional[str] = ""
     normalized: str
     notes: Optional[str] = ""
 

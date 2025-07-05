@@ -109,29 +109,9 @@ async def add_word(
 
     # Step 1: Create word without audio_url to get its ID
     db_word = crud.create_word(
-        db, word.text, ai_data, ai_data["level"], audio_url=None)
+        db, word.text, ai_data, ai_data["level"])
     db.refresh(db_word)  # Get the generated id from DB
     return db_word
-'''
-    # Step 2: Generate audio file named after db_word.id
-    audio_url = None
-    try:
-        filename = await ai_integration.synthesize_maori_audio_with_polly(
-            ai_data.get("translation", ""),
-            # <--- Use word id as filename!
-            filename_override=f"{db_word.id}.mp3",
-        )
-        audio_url = f"/static/audio/{filename}"
-        # Step 3: Update db_word with the audio URL
-        db_word.audio_url = audio_url
-        db.commit()
-        db.refresh(db_word)
-    except Exception as e:
-        # Audio generation failed, just proceed without audio
-        pass
-        '''
-
-      # Return the (possibly updated) DB object
 
 
 @router.post("/words/{word_id}/generate_audio_polly", tags=["Words"],
@@ -209,7 +189,7 @@ async def batch_add_words(
             ai_data = sanitize_ai_data(ai_data)
             ai_data["level"] = sanitize_level(ai_data.get("level"))
             db_word = crud.create_word(
-                db, text, ai_data, ai_data["level"], audio_url=None)
+                db, text, ai_data, ai_data["level"])
             db.refresh(db_word)
             added.append(db_word)
             '''
@@ -229,7 +209,7 @@ async def batch_add_words(
         except Exception as e:
             logger.error("Error adding word '%s': %s", text, e)
             skipped.append(text)
-            
+
     return schemas.BatchWordResult(
         added=added,
         skipped=skipped

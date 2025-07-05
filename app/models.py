@@ -31,11 +31,12 @@ class Word(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String, unique=True, index=True)
     translation = Column(String)
+    ipa = Column(String)       # e.g., "ˈfaː.naʉ"
+    phonetic = Column(String)  # e.g., "far-now" (simple English)
     level = Column(String)  # e.g., "Beginner", "Intermediate"
     type = Column(String)  # e.g., noun, verb, etc.
     domain = Column(String)  # e.g., greetings, food
     example = Column(Text)  # Example sentence
-    audio_url = Column(String)  # URL for audio pronunciation
     # Lowercased version for dedup/search
     normalized = Column(String, index=True)
     notes = Column(Text)  # Cultural/usage notes

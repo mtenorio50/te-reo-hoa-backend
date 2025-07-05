@@ -28,10 +28,6 @@ def get_next_api_key():
     return next(key_cycle)
 
 
-# GOOGLE_API_KEY = os.getenv("GOOGLE_AI_API_KEY")
-# GEMINI_MODEL = "gemini-2.5-flash"
-# API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GOOGLE_API_KEYS}"
-
 AUDIO_DIR = "./static/audio/"
 os.makedirs(AUDIO_DIR, exist_ok=True)
 polly_client = boto3.client("polly", region_name="ap-southeast-2")
@@ -77,6 +73,8 @@ async def get_translation(word: str, max_retries=3):
 
     {{
     "translation": "...",   // just the translation no other else
+    "ipa": "...",           // The correct IPA pronunciation for the Māori translation
+    "phonetic": "..."       // A simple English phonetic spelling for the Māori translation
     "type": "...",          // e.g., noun, verb, etc.
     "domain": "...",        // e.g., greetings, number, weather, etc.
     "example": "...",       // Example usage in a sentence (in both Māori and English, if possible)
@@ -141,16 +139,6 @@ async def synthesize_maori_audio_with_polly(
     return filename
 
 
-async def get_pronunciation_guide(maori_word):
-    prompt = f"""For the Māori word "{maori_word}", provide:
-- The correct IPA pronunciation guide (International Phonetic Alphabet)
-- A simple English phonetic spelling
-Return your answer as a valid JSON object, no markdown, like:
-{{
-  "ipa": "...",
-  "phonetic": "..."
-}}
-"""
     # (Use same logic as your other Gemini calls, then parse as JSON)
     # Return as string or dict as you like (save in DB as needed)
     # See previous responses for example code
