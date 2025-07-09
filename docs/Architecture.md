@@ -4,8 +4,8 @@
 
 Te Reo Hoa is a comprehensive language learning platform focused on English-to-Māori translation, vocabulary management, user progress tracking, and AI-powered content delivery. The architecture follows a modern, modular design with clear separation of concerns, scalable components, and robust error handling.
 
-**Current Version**: v1.1 - Enhanced Production Backend with PostgreSQL Migration  
-**Last Updated**: July 2, 2025
+**Current Version**: v1.2 - Advanced Testing Framework & Quality Assurance Enhancement  
+**Last Updated**: July 10, 2025
 
 ---
 
@@ -21,7 +21,25 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 
 ---
 
-## 🚀 **Recent Architecture Enhancements (July 2, 2025)**
+## 🚀 **Recent Architecture Enhancements (July 10, 2025)**
+
+### **Advanced Testing Framework & Quality Assurance**
+- **Comprehensive Test Coverage**: Expanded to 12 specialized test modules covering all critical functionality
+- **Advanced Testing Infrastructure**: Enhanced fixtures and mocking framework for reliable testing
+- **Quality Assurance Enhancement**: Complete endpoint coverage with authentication and authorization testing
+- **Role-Based Testing**: Comprehensive testing of admin vs learner permissions and data isolation
+- **Test Automation**: Advanced mocking and fixture management with AI integration testing
+
+### **Testing Infrastructure Improvements**
+- **Enhanced Test Modules**: Complete API testing coverage including progress tracking, user management, and word management
+- **Advanced Fixtures**: Automated admin and learner registration with proper test isolation
+- **Mocking Framework**: AI integration mocking with consistent test responses for reliable testing
+- **Database Testing**: Comprehensive database connectivity and transaction integrity verification
+- **Edge Case Coverage**: Complete testing of invalid inputs, unauthorized access, and error handling scenarios
+
+---
+
+## 🚀 **Previous Architecture Enhancements (July 2, 2025)**
 
 ### **Database Migration & Production Scaling**
 - **PostgreSQL Integration**: Successfully migrated from SQLite to PostgreSQL for enhanced scalability
@@ -70,6 +88,7 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 - `/progress` - User learning progress tracking
 - `/quiz` - Interactive learning assessments
 - `/news` - Curated positive news content
+- `/tts` - Text to speech service
 
 **Features**:
 - Automatic request/response validation with Pydantic schemas
@@ -330,8 +349,20 @@ te-reo-hoa-backend/
 ├── 📚 docs/                   # Project documentation
 │   ├── Architecture.md       # System architecture guide
 │   └── Progress.md           # Development timeline
-├── 🧪 tests/                  # Test suite
-│   └── test_basic.py         # Basic functionality tests
+├── 🧪 tests/                  # Comprehensive test suite
+│   ├── test_ai_function.py   # AI integration testing
+│   ├── test_api_progress.py  # Progress tracking API testing
+│   ├── test_api_users.py     # User management API testing
+│   ├── test_api_words.py     # Word management API testing
+│   ├── test_connection.py    # Database connectivity testing
+│   ├── test_endpoint_auth.py # Authentication testing
+│   ├── test_listing_words.py # Word listing functionality
+│   ├── test_login.py         # Login system testing
+│   ├── test_search_words.py  # Search functionality testing
+│   ├── test_user_regsiter.py # User registration testing
+│   ├── test_WOTD.py          # Word of the Day testing
+│   ├── ipa.py                # IPA phonetic utilities
+│   └── conftest.py           # Test configuration and fixtures
 ├── main.py                   # Application entry point
 ├── requirements.txt          # Python dependencies
 └── README.md                 # README file
@@ -440,10 +471,11 @@ Production Server
 - **API Endpoints**: 15 endpoints with comprehensive testing coverage
 - **Database Models**: 4 comprehensive models optimized for PostgreSQL
 - **Database Backend**: PostgreSQL on Supabase with enhanced performance
-- **Test Coverage**: 9 specialized test modules covering all major functionality
+- **Test Coverage**: 12 specialized test modules covering all major functionality
 - **Configuration Management**: Dual-environment database support (PostgreSQL/SQLite)
 - **Cloud Integration**: Supabase PostgreSQL with secure cloud-based data management
 - **Authentication System**: Advanced JWT implementation with comprehensive test validation
+- **Quality Assurance**: Complete API testing with role-based access and data integrity verification
 
 ### **Architecture Principles Achieved**
 - ✅ **Modularity**: Clean router-based organization with comprehensive testing
@@ -453,7 +485,7 @@ Production Server
 - ✅ **Maintainability**: Clear separation of concerns and comprehensive documentation
 - ✅ **Extensibility**: Plugin-ready AI and service integrations with test coverage
 - ✅ **Production Ready**: Cloud database integration with Supabase PostgreSQL
-- ✅ **Test Coverage**: 9 specialized test modules ensuring system reliability
+- ✅ **Test Coverage**: 12 specialized test modules ensuring system reliability
 
 ---
 
@@ -466,6 +498,6 @@ Production Server
 
 ---
 
-*Architecture Document Version: 2.1*  
-*Last Updated: July 2, 2025*  
-*Status: Production Ready with PostgreSQL Migration and Enhanced Testing*
+*Architecture Document Version: 2.2*  
+*Last Updated: July 10, 2025*  
+*Status: Production Ready with Advanced Testing Framework & Quality Assurance*

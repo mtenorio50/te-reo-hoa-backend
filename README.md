@@ -25,24 +25,25 @@ Te Reo Hoa is a modern, scalable backend API designed to power an English-to-Mā
 - 📊 **Progress Tracking** - Detailed user learning analytics
 - 🚀 **Auto-Provisioning** - Intelligent database setup with cross-platform compatibility
 - 🗃️ **PostgreSQL Integration** - Production-grade database with Supabase cloud hosting
-- 🧪 **Comprehensive Testing** - Advanced test suite with 9 specialized test modules
+- 🧪 **Comprehensive Testing** - Advanced test suite with 12 specialized test modules
 
 ---
 
-## 🚀 Latest Updates (July 2, 2025)
+## 🚀 Latest Updates (July 10, 2025)
 
-### Database Migration & Production Enhancement ✅
-- **PostgreSQL Migration**: Successfully migrated to PostgreSQL for enhanced scalability and performance
-- **Supabase Integration**: Cloud-based PostgreSQL database with secure authentication and backup
-- **Dual Database Support**: PostgreSQL for production, SQLite for development environments
-- **Enhanced Testing**: Comprehensive test suite with 9 specialized modules covering all functionality
-- **Production Readiness**: Advanced database configuration for high-availability deployment
+### Advanced Testing Framework & Quality Assurance Enhancement ✅
+- **Enhanced Testing Infrastructure**: Advanced test framework with comprehensive fixtures and mocking
+- **Expanded Test Coverage**: 12 specialized test modules covering all critical functionality areas
+- **Advanced Test Automation**: Comprehensive mocking and fixture management for reliable testing
+- **Quality Assurance**: Complete endpoint coverage with authentication and authorization testing
+- **Role-Based Testing**: Comprehensive testing of admin vs learner permissions and data isolation
 
-### Testing Infrastructure ✅
-- **Comprehensive Test Coverage**: 9 specialized test modules including authentication, AI integration, and search functionality
-- **Test Isolation**: Dedicated test database configuration preventing development data interference
-- **Advanced Testing**: Mock handling for AI services and comprehensive endpoint validation
-- **Quality Assurance**: Enhanced reliability through systematic testing of all major features
+### Comprehensive Testing Infrastructure ✅
+- **12 Specialized Test Modules**: Complete coverage including API endpoints, user management, and AI integration
+- **Advanced Fixtures**: Enhanced `conftest.py` with automated admin and learner registration
+- **Test Isolation**: Improved database setup with proper cleanup and cross-user data isolation
+- **Mocking Framework**: AI integration mocking with consistent test responses
+- **Edge Case Coverage**: Comprehensive testing of invalid inputs, unauthorized access, and error handling
 
 ---
 
@@ -99,6 +100,9 @@ te-reo-hoa-backend/
 │   └── Progress.md           # Development timeline
 ├── 🧪 tests/                  # Comprehensive test suite
 │   ├── test_ai_function.py   # AI integration testing
+│   ├── test_api_progress.py  # Progress tracking API testing
+│   ├── test_api_users.py     # User management API testing
+│   ├── test_api_words.py     # Word management API testing
 │   ├── test_connection.py    # Database connectivity testing
 │   ├── test_endpoint_auth.py # Authentication testing
 │   ├── test_listing_words.py # Word listing functionality
@@ -106,7 +110,8 @@ te-reo-hoa-backend/
 │   ├── test_search_words.py  # Search functionality testing
 │   ├── test_user_regsiter.py # User registration testing
 │   ├── test_WOTD.py          # Word of the Day testing
-│   └── conftest.py           # Test configuration
+│   ├── ipa.py                # IPA phonetic utilities
+│   └── conftest.py           # Test configuration and fixtures
 ├── main.py                   # Application entry point
 ├── requirements.txt          # Python dependencies
 └── README.md                 # This file
@@ -347,19 +352,25 @@ pytest --cov=app tests/
 
 # Run specific test modules
 pytest tests/test_ai_function.py -v        # AI integration tests
-pytest tests/test_connection.py -v        # Database connection tests
-pytest tests/test_endpoint_auth.py -v     # Authentication tests
-pytest tests/test_login.py -v             # Login functionality tests
-pytest tests/test_search_words.py -v      # Search functionality tests
+pytest tests/test_api_progress.py -v       # Progress tracking API tests
+pytest tests/test_api_users.py -v          # User management API tests
+pytest tests/test_api_words.py -v          # Word management API tests
+pytest tests/test_connection.py -v         # Database connection tests
+pytest tests/test_endpoint_auth.py -v      # Authentication tests
+pytest tests/test_login.py -v              # Login functionality tests
+pytest tests/test_search_words.py -v       # Search functionality tests
 ```
 
 ### Test Structure
-- **Unit Tests**: Individual component testing across 9 specialized modules
+- **Unit Tests**: Individual component testing across 12 specialized modules
 - **Integration Tests**: API endpoint testing with authentication validation
 - **Database Tests**: Connection and transaction testing for both PostgreSQL and SQLite
 - **Authentication Tests**: Complete security mechanism verification
 - **AI Integration Tests**: External service testing with mock responses
 - **Search Tests**: Word search and discovery functionality validation
+- **User Management Tests**: Registration, role-based access, and permission testing
+- **Progress Tracking Tests**: Learning progress accuracy and consistency validation
+- **Word Management Tests**: CRUD operations, duplicate detection, and data integrity
 
 ---
 
@@ -530,13 +541,19 @@ This project is part of the MSE800 Post School Education program at YooBee Colle
 
 ## 🔄 Changelog
 
-### Version 1.0 (June 30, 2025)
-- ✅ **Infrastructure Improvements**: Enhanced database configuration and auto-provisioning
-- ✅ **TTS Integration**: Complete text-to-speech functionality with intelligent caching
-- ✅ **Cross-Platform Support**: Consistent behavior across Windows, macOS, and Linux
-- ✅ **Enhanced Documentation**: Comprehensive architecture and setup documentation
-- ✅ **Error Handling**: Robust error recovery and debugging capabilities
-- ✅ **Login Optimization**: Dual-path endpoint support for better compatibility
+### Version 1.2 (July 10, 2025)
+- ✅ **Advanced Testing Framework**: Enhanced test infrastructure with 12 specialized test modules
+- ✅ **Quality Assurance Enhancement**: Comprehensive endpoint coverage and role-based testing
+- ✅ **Test Automation**: Advanced fixtures and mocking framework for reliable testing
+- ✅ **Data Integrity Testing**: Cross-user data isolation and transaction integrity verification
+- ✅ **Edge Case Coverage**: Comprehensive testing of invalid inputs and error handling scenarios
+
+### Version 1.1 (July 2, 2025)
+- ✅ **Database Migration & Production Scaling**: PostgreSQL integration with Supabase cloud hosting
+- ✅ **Dual Database Support**: PostgreSQL for production, SQLite for development
+- ✅ **Enhanced Performance**: Improved query performance and connection pooling
+- ✅ **Testing Infrastructure**: Comprehensive test suite with database isolation
+- ✅ **Production Readiness**: Cloud database architecture for high-availability deployment
 
 ### Previous Versions
 - **v0.9**: Core API functionality with basic authentication
@@ -546,5 +563,5 @@ This project is part of the MSE800 Post School Education program at YooBee Colle
 
 ---
 
-*Last Updated: June 30, 2025*  
-*Status: Production Ready with Enhanced Infrastructure*
+*Last Updated: July 10, 2025*  
+*Status: Production Ready with Advanced Testing Framework*
