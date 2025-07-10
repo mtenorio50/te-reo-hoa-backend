@@ -71,7 +71,7 @@ def list_all_news(
         .all()
     )
     # Ensure returned objects are converted for Pydantic schema
-    return [NewsOut.from_orm(item) for item in news_items]
+    return [NewsOut.model_validate(item) for item in news_items]
 
 
 @router.post("/refresh", tags=["News"], summary="Refresh news from AI",

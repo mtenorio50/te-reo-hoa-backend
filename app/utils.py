@@ -35,7 +35,8 @@ def extract_json_from_markdown(md_text: str) -> dict:
 
 def sanitize_ai_data(ai_data: dict) -> dict:
     """Ensures all expected keys exist and are non-None strings."""
-    fields = ["translation", "type", "domain", "example", "notes"]
+    fields = ["translation", "ipa", "phonetic",
+              "type", "domain", "example", "notes"]
     for f in fields:
         ai_data[f] = str(ai_data.get(f) or "")
     return ai_data

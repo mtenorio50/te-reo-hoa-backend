@@ -73,13 +73,15 @@ async def get_translation(word: str, max_retries=3):
 
     {{
     "translation": "...",   // just the translation no other else
-    "ipa": "...",           // The correct IPA pronunciation for the Māori translation
-    "phonetic": "..."       // A simple English phonetic spelling for the Māori translation
-    "type": "...",          // e.g., noun, verb, etc.
+    "ipa": "...",           // The correct IPA pronunciation for the Māori translation (REQUIRED, even for multi-word phrases - provide IPA for each word if needed)
+    "phonetic": "..."       // A simple English phonetic spelling for the Māori translation (REQUIRED, even for multi-word phrases - show how to pronounce each word)
+    "type": "...",          // e.g., noun, verb, phrase, etc.
     "domain": "...",        // e.g., greetings, number, weather, etc.
     "example": "...",       // Example usage in a sentence (in both Māori and English, if possible)
     "notes": "..."          // Cultural or usage notes (can be blank)
     }}
+
+    IMPORTANT: Always provide IPA and phonetic pronunciations even for multi-word phrases or compound words. If translating a phrase, provide the pronunciation for each Māori word or the complete phrase.
 
     If you do not know the answer for a field, use an empty string (""). Do NOT use markdown or any code fences—just output the JSON.
 
@@ -130,14 +132,13 @@ async def synthesize_maori_audio_with_polly(
     )
     audio_stream = response.get("AudioStream")
     if not audio_stream:
-        logger.error("No audio stream returned from Polly:", audio_stream)
+        logger.error("No audio stream returned from Polly: %s", audio_stream)
         raise Exception("No audio stream returned from Polly.")
     filename = filename_override or f"polly_{maori_text.replace(' ', '_').lower()}.mp3"
     audio_path = os.path.join(AUDIO_DIR, filename)
     with open(audio_path, "wb") as f:
         f.write(audio_stream.read())
     return filename
-
 
     # (Use same logic as your other Gemini calls, then parse as JSON)
     # Return as string or dict as you like (save in DB as needed)

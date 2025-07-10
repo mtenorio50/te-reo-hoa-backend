@@ -91,7 +91,7 @@ def mock_get_translation(monkeypatch):
         return {
             "candidates": [{
                 "content": {"parts": [{
-                    "text": '{"translation": "fake", "type": "noun", "domain": "", "example": "", "notes": ""}'
+                    "text": '{"translation": "fake", "ipa": "fake_ipa", "phonetic": "fake_phonetic", "type": "noun", "domain": "", "example": "", "notes": ""}'
                 }]}
             }]
         }

@@ -100,7 +100,9 @@ async def add_word(
         )
     try:
         ai_data = extract_json_from_markdown(raw_ai_text)
+        logger.debug("Raw AI data for '%s': %s", word.text, ai_data)
         ai_data = sanitize_ai_data(ai_data)
+        logger.debug("Sanitized AI data for '%s': %s", word.text, ai_data)
     except Exception:
         logger.error("Failed to parse AI response: %s", ai_data)
         raise HTTPException(
@@ -111,6 +113,8 @@ async def add_word(
     db_word = crud.create_word(
         db, word.text, ai_data, ai_data["level"])
     db.refresh(db_word)  # Get the generated id from DB
+    logger.info("Created word '%s' with IPA: '%s', phonetic: '%s'",
+                word.text, db_word.ipa, db_word.phonetic)
     return db_word
 
 
@@ -186,11 +190,15 @@ async def batch_add_words(
                 skipped.append(text)
                 continue
             ai_data = extract_json_from_markdown(raw_ai_text)
+            logger.debug("Raw AI data for '%s': %s", text, ai_data)
             ai_data = sanitize_ai_data(ai_data)
+            logger.debug("Sanitized AI data for '%s': %s", text, ai_data)
             ai_data["level"] = sanitize_level(ai_data.get("level"))
             db_word = crud.create_word(
                 db, text, ai_data, ai_data["level"])
             db.refresh(db_word)
+            logger.info("Created word '%s' with IPA: '%s', phonetic: '%s'",
+                        text, db_word.ipa, db_word.phonetic)
             added.append(db_word)
             '''
             # Optional: Generate audio
