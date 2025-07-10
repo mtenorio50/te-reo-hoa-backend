@@ -1,18 +1,16 @@
+import logging
+import os
+import json
+from app.utils import start_scheduler
+from app.router import login, news, progress, quiz, translate, tts, users, words
+from app.database import engine, SessionLocal
+from app import models, auth
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from dotenv import load_dotenv
 load_dotenv()
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-
-from app import models, auth
-from app.database import engine, SessionLocal
-from app.router import login, news, progress, quiz, translate, tts, users, words
-from app.utils import start_scheduler
-
-import json
-import os
-import logging
 
 logging.basicConfig(
     level=logging.INFO,  # Change to logging.DEBUG for even more detail
@@ -32,17 +30,19 @@ def load_default_admin_config():
     config_path = "config/settings.json"
     try:
         if not os.path.exists(config_path):
-            logger.warning(f"Config file {config_path} not found, using fallback admin settings")
+            logger.warning(
+                f"Config file {config_path} not found, using fallback admin settings")
             return {"email": "admin@admin.com", "password": "123456"}
-        
+
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
-        
+
         default_admin = config.get("default_admin", {})
         if not default_admin.get("email") or not default_admin.get("password"):
-            logger.warning("Invalid admin config in settings.json, using fallback settings")
+            logger.warning(
+                "Invalid admin config in settings.json, using fallback settings")
             return {"email": "admin@admin.com", "password": "123456"}
-        
+
         return default_admin
     except Exception as e:
         logger.error(f"Error loading admin config from {config_path}: {e}")
@@ -57,18 +57,20 @@ def init_default_admin():
         admin_config = load_default_admin_config()
         admin_email = admin_config["email"]
         admin_password = admin_config["password"]
-        
+
         # Check if the specific admin account exists
         existing_user = auth.get_user_by_email(db, admin_email)
-        
+
         if existing_user:
             # If user exists but is not admin, promote to admin
             if existing_user.role != "admin":
                 existing_user.role = "admin"
                 db.commit()
-                logger.info(f"Promoted existing user {admin_email} to admin role")
+                logger.info(
+                    f"Promoted existing user {admin_email} to admin role")
             else:
-                logger.info(f"Admin account {admin_email} already exists with admin role")
+                logger.info(
+                    f"Admin account {admin_email} already exists with admin role")
         else:
             # Create new admin account
             hashed_password = auth.get_password_hash(admin_password)
@@ -80,12 +82,12 @@ def init_default_admin():
             db.add(admin_user)
             db.commit()
             logger.info(f"Created default admin account: {admin_email}")
-            
+
     except Exception as e:
         logger.error(f"Error creating default admin account: {e}")
         db.rollback()
     finally:
-        db.close() 
+        db.close()
 
 
 # Create database tables
@@ -114,7 +116,28 @@ def read_root():
     return {"message": "Te Reo Hoa Backend(API) is running"}
 
 
-start_scheduler()
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Render."""
+    return {
+        "status": "healthy",
+        "service": "Te Reo Hoa API",
+        "scheduler": "enabled"
+    }
+
+
+# Start the scheduler with proper error handling
+logger.info("🚀 Starting application scheduler...")
+try:
+    scheduler_instance = start_scheduler()
+    if scheduler_instance:
+        logger.info(
+            "✅ Scheduler started successfully - Daily news refresh at 8:00 AM New Zealand time")
+    else:
+        logger.error("❌ Failed to start scheduler")
+except Exception as e:
+    logger.error(f"❌ Scheduler startup error: {e}")
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(login.router, prefix="/login")
 app.include_router(users.router, prefix="/users")

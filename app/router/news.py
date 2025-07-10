@@ -85,6 +85,44 @@ async def admin_refresh_news(
     return {"added": added, "message": f"{added} new news stories added."}
 
 
+@router.post("/refresh", tags=["News"],
+             summary="Manually trigger news refresh",
+             description="Manually refresh news from AI. Admin access required.")
+def manual_news_refresh_endpoint(
+    current_user=Depends(require_admin),
+):
+    """Manually trigger news refresh (admin only)."""
+    try:
+        from app.utils import manual_news_refresh
+
+        logger.info("[MANUAL REFRESH] Admin triggered manual news refresh")
+        manual_news_refresh()
+
+        return {
+            "message": "Manual news refresh completed successfully",
+            "triggered_by": "admin",
+            "note": "Check logs for detailed results"
+        }
+
+    except Exception as e:
+        logger.error(f"[MANUAL REFRESH] Failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Manual refresh failed: {str(e)}"
+        )
+
+
+@router.get("/scheduler-status", tags=["News"],
+            summary="Check scheduler status",
+            description="Check if news scheduler is running. Admin access required.")
+def scheduler_status_endpoint(
+    current_user=Depends(require_admin),
+):
+    """Check scheduler status (admin only)."""
+    from app.utils import get_scheduler_status
+    return get_scheduler_status()
+
+
 @router.delete("/{news_id}", tags=["News"],
                summary="Delete a news item",
                description="Deletes a news story by its ID. Admin access required.")
@@ -100,21 +138,3 @@ def delete_news(
     db.delete(news)
     db.commit()
     return {"message": f"News item {news_id} deleted"}
-
-
-"""
-@router.delete("/batch", tags=["News"])
-def batch_delete_news(
-    request: BatchDeleteRequest,
-    db: Session = Depends(get_db),
-    current_user=Depends(require_admin),
-):
-    deleted = 0
-    for news_id in request.ids:
-        news = db.query(NewsItem).filter_by(id=news_id).first()
-        if news:
-            db.delete(news)
-            deleted += 1
-    db.commit()
-    return {"deleted": deleted, "message": f"{deleted} news items deleted"}
-"""
