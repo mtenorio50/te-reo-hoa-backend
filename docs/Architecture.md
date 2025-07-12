@@ -4,8 +4,8 @@
 
 Te Reo Hoa is a comprehensive language learning platform focused on English-to-Māori translation, vocabulary management, user progress tracking, and AI-powered content delivery. The architecture follows a modern, modular design with clear separation of concerns, scalable components, and robust error handling.
 
-**Current Version**: v1.2 - Advanced Testing Framework & Quality Assurance Enhancement  
-**Last Updated**: July 10, 2025
+**Current Version**: v1.3 - Enhanced Documentation & Testing Infrastructure  
+**Last Updated**: July 12, 2025
 
 ---
 
@@ -21,20 +21,31 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 
 ---
 
-## 🚀 **Recent Architecture Enhancements (July 10, 2025)**
+## 🚀 **Latest Architecture Enhancements (July 12, 2025)**
+
+### **Enhanced Documentation & Testing Infrastructure**
+- **Comprehensive Test Coverage**: Expanded to 14 specialized test modules covering all critical functionality
+- **Audio Processing Enhancement**: Added TTS audio synthesis testing with comprehensive audio validation
+- **IPA Phonetic Integration**: Enhanced phonetic transcription support for accurate pronunciation testing
+- **Production Deployment Ready**: Render.com deployment configuration with health monitoring endpoints
+- **Router-Based Architecture**: Modular endpoint organization with dedicated router modules
+
+### **Database Architecture Modernization**
+- **PostgreSQL-Only Configuration**: Streamlined to use only PostgreSQL for both development and production
+- **Supabase Cloud Integration**: Enhanced cloud database configuration with secure connection management
+- **Simplified Configuration**: Removed dual-database complexity, focusing on production-grade PostgreSQL
+- **Enhanced Connection Management**: Improved database session handling and connection pooling
+- **Configuration Management**: JSON-based settings with environment-specific configurations
+
+---
+
+## 🚀 **Previous Architecture Enhancements (July 10, 2025)**
 
 ### **Advanced Testing Framework & Quality Assurance**
-- **Comprehensive Test Coverage**: Expanded to 12 specialized test modules covering all critical functionality
-- **Advanced Testing Infrastructure**: Enhanced fixtures and mocking framework for reliable testing
+- **Comprehensive Test Coverage**: Expanded testing infrastructure with advanced fixtures and mocking
 - **Quality Assurance Enhancement**: Complete endpoint coverage with authentication and authorization testing
 - **Role-Based Testing**: Comprehensive testing of admin vs learner permissions and data isolation
 - **Test Automation**: Advanced mocking and fixture management with AI integration testing
-
-### **Testing Infrastructure Improvements**
-- **Enhanced Test Modules**: Complete API testing coverage including progress tracking, user management, and word management
-- **Advanced Fixtures**: Automated admin and learner registration with proper test isolation
-- **Mocking Framework**: AI integration mocking with consistent test responses for reliable testing
-- **Database Testing**: Comprehensive database connectivity and transaction integrity verification
 - **Edge Case Coverage**: Complete testing of invalid inputs, unauthorized access, and error handling scenarios
 
 ---
@@ -44,34 +55,9 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 ### **Database Migration & Production Scaling**
 - **PostgreSQL Integration**: Successfully migrated from SQLite to PostgreSQL for enhanced scalability
 - **Cloud Database**: Supabase PostgreSQL integration for production-grade data management
-- **Dual Database Support**: Maintained SQLite for development while using PostgreSQL for production
 - **Enhanced Performance**: Improved query performance and connection pooling with PostgreSQL
-- **Testing Infrastructure**: Comprehensive test suite with 9 specialized test modules
-
-### **Production Readiness Improvements**
-- **Cloud Integration**: Seamless Supabase PostgreSQL connection with secure authentication
-- **Test Coverage**: Advanced testing framework covering all major functionality areas
-- **Database Optimization**: Enhanced connection management and transaction handling
-- **Scalability**: Production-ready database architecture for high-availability deployment
-- **Configuration Management**: Dual-environment configuration supporting both development and production
-
----
-
-## 🚀 **Previous Architecture Enhancements (June 30, 2025)**
-
-### **Infrastructure Improvements**
-- **Enhanced Database Layer**: Robust SQLite configuration with automatic directory creation
-- **Intelligent Path Resolution**: Advanced cross-platform path handling system
-- **Error Recovery Mechanisms**: Comprehensive database connection error handling
-- **Environment Configuration**: Streamlined setup with intelligent fallback systems
-- **Login Endpoint Optimization**: Dual-path support resolving 307 redirect issues
-
-### **Configuration Management Evolution**
-- **Auto-provisioning**: Automatic creation of database directories and files
-- **Flexible Setup**: Support for both development and production configurations
-- **Debug Integration**: Real-time database path and connection status reporting
-- **Cross-Platform Compatibility**: Consistent behavior across different operating systems
-- **Graceful Degradation**: Robust fallback mechanisms for missing configurations
+- **Testing Infrastructure**: Comprehensive test suite development
+- **Configuration Management**: Environment-based configuration supporting production deployment
 
 ---
 
@@ -127,11 +113,11 @@ Te Reo Hoa is a comprehensive language learning platform focused on English-to-M
 ### 3. **Data Layer**
 
 **Database Configuration** (`database.py`):
-- **PostgreSQL Production Database**: Supabase cloud integration for scalable data management
-- **Dual Database Support**: SQLite for development, PostgreSQL for production environments
-- **Enhanced Connection Management**: Advanced connection pooling and transaction handling
-- **Cloud Database Security**: Secure authentication and encrypted connections
-- **Cross-Platform Compatibility**: Consistent behavior across development and production environments
+- **PostgreSQL-Only Architecture**: Streamlined configuration using only PostgreSQL
+- **Supabase Cloud Integration**: Production-grade cloud database hosting
+- **Enhanced Connection Management**: Advanced connection pooling and session handling
+- **Environment-Based Configuration**: Uses `POSTGRE_SQLALCHEMY_DATABASE_URL` environment variable
+- **Secure Authentication**: Encrypted connections with secure credential management
 
 **Database Models** (`models.py`):
 ```python
@@ -208,28 +194,22 @@ NewsItem:
 te-reo-hoa-backend/
 ├── Production Environment:        # PostgreSQL on Supabase
 │   └── Supabase PostgreSQL        # Cloud-hosted production database
-├── Development Environment:       # SQLite with auto-provisioning
-│   ├── data/                      # Auto-created database directory
-│   └── te_reo_hoa.db             # Local SQLite database file
-├── Testing Environment:           # Isolated test database
-│   └── test.db                    # Dedicated test database
+├── Development Environment:       # PostgreSQL configuration
+│   └── PostgreSQL via Supabase    # Unified PostgreSQL environment
+├── Testing Environment:           # PostgreSQL test configuration
+│   └── Test Database              # Dedicated test database setup
 └── app/
-    └── database.py                # Dual-database configuration
+    └── database.py                # PostgreSQL-only configuration
 ```
 
 ### Database Configuration Management
 
-**Production Configuration**:
+**PostgreSQL Configuration**:
 - **Primary Database**: PostgreSQL on Supabase cloud infrastructure
 - **Connection String**: `POSTGRE_SQLALCHEMY_DATABASE_URL` environment variable
 - **Features**: Advanced PostgreSQL features, connection pooling, cloud backup
 - **Scalability**: High-availability setup with automatic scaling
-
-**Development Configuration**:
-- **Local Database**: SQLite with auto-provisioning
-- **Connection String**: `SQLALCHEMY_DATABASE_URL` for local development
-- **Features**: Automatic directory creation, cross-platform compatibility
-- **Development Experience**: Zero-configuration setup for new developers
+- **Environment Unified**: Single PostgreSQL configuration for all environments
 
 ### Entity Relationship Diagram
 
@@ -324,48 +304,47 @@ CREATE INDEX idx_news_source_url ON news(source_url);
 te-reo-hoa-backend/
 ├── 📱 app/                    # Main application package
 │   ├── 🛣️ router/            # API endpoint organization
-│   │   ├── login.py          # Authentication (dual-path support)
-│   │   ├── users.py          # User management endpoints
-│   │   ├── words.py          # Vocabulary management
-│   │   ├── translate.py      # Translation services
-│   │   ├── tts.py            # Text-to-Speech with caching
-│   │   ├── progress.py       # Learning progress tracking
-│   │   ├── quiz.py           # Assessment functionality
-│   │   └── news.py           # News content delivery
+│   │   ├── admin.py          # Admin management endpoints
+│   │   ├── auth.py           # Authentication endpoints
+│   │   ├── news.py           # News content management
+│   │   ├── phrase.py         # Te Reo phrase management
+│   │   ├── pronunciation.py  # Audio pronunciation features
+│   │   ├── quiz.py           # Interactive quiz system
+│   │   ├── system.py         # System health and monitoring
+│   │   ├── translation.py    # AI-powered translation services
+│   │   └── user.py           # User profile management
+│   ├── __init__.py           # Application package initialization
+│   ├── ai_integration.py     # Google Gemini AI integration
+│   ├── auth.py               # JWT authentication and authorization
+│   ├── crud.py               # Database CRUD operations
+│   ├── database.py           # PostgreSQL database configuration
+│   ├── db_initialize.py      # Database initialization and setup
+│   ├── main.py               # FastAPI application entry point
 │   ├── models.py             # SQLAlchemy database models
-│   ├── schemas.py            # Pydantic validation schemas
-│   ├── database.py           # Intelligent database configuration
-│   ├── crud.py               # Database operation abstractions
-│   ├── auth.py               # Authentication & authorization
-│   ├── ai_integration.py     # External AI service integrations
-│   └── utils.py              # Shared utility functions
-├── 📊 data/                   # Auto-created database storage
-│   └── te_reo_hoa.db         # SQLite database file
-├── 🔊 static/                 # Static file serving
-│   └── audio/                # Generated pronunciation files
-│       └── tts_cache/        # Cached TTS audio files
-├── ⚙️ config/                # Configuration files
-│   └── settings.json         # Admin and application settings
-├── 📚 docs/                   # Project documentation
+│   ├── schemas.py            # Pydantic response/request schemas
+│   └── utils.py              # Utility functions and helpers
+├── 📚 docs/                  # Project documentation
 │   ├── Architecture.md       # System architecture guide
 │   └── Progress.md           # Development timeline
-├── 🧪 tests/                  # Comprehensive test suite
-│   ├── test_ai_function.py   # AI integration testing
-│   ├── test_api_progress.py  # Progress tracking API testing
-│   ├── test_api_users.py     # User management API testing
-│   ├── test_api_words.py     # Word management API testing
-│   ├── test_connection.py    # Database connectivity testing
-│   ├── test_endpoint_auth.py # Authentication testing
-│   ├── test_listing_words.py # Word listing functionality
-│   ├── test_login.py         # Login system testing
-│   ├── test_search_words.py  # Search functionality testing
-│   ├── test_user_regsiter.py # User registration testing
-│   ├── test_WOTD.py          # Word of the Day testing
-│   ├── ipa.py                # IPA phonetic utilities
-│   └── conftest.py           # Test configuration and fixtures
-├── main.py                   # Application entry point
+├── 🧪 tests/                 # Comprehensive test suite (14 modules)
+│   ├── conftest.py           # Test configuration and fixtures
+│   ├── test_basic.py         # Basic functionality tests
+│   ├── test_admin.py         # Admin endpoint tests
+│   ├── test_ai_integration.py # AI integration tests
+│   ├── test_auth.py          # Authentication tests
+│   ├── test_crud.py          # Database CRUD tests
+│   ├── test_database.py      # Database configuration tests
+│   ├── test_db_initialize.py # Database initialization tests
+│   ├── test_main.py          # Main application tests
+│   ├── test_models.py        # Database model tests
+│   ├── test_news.py          # News system tests
+│   ├── test_phrase.py        # Phrase management tests
+│   ├── test_pronunciation.py # Pronunciation feature tests
+│   ├── test_schemas.py       # Schema validation tests
+│   └── test_utils.py         # Utility function tests
+├── README.md                 # Project documentation and setup guide
 ├── requirements.txt          # Python dependencies
-└── README.md                 # README file
+├── main.py                   # Application entry point
 ```
 
 ---
@@ -468,11 +447,11 @@ Production Server
 ## 📊 Architecture Quality Metrics
 
 ### **Current Architecture Statistics**
-- **API Endpoints**: 15 endpoints with comprehensive testing coverage
+- **API Endpoints**: 14 endpoints with comprehensive testing coverage
 - **Database Models**: 4 comprehensive models optimized for PostgreSQL
-- **Database Backend**: PostgreSQL on Supabase with enhanced performance
-- **Test Coverage**: 12 specialized test modules covering all major functionality
-- **Configuration Management**: Dual-environment database support (PostgreSQL/SQLite)
+- **Database Backend**: PostgreSQL-only configuration on Supabase cloud platform
+- **Test Coverage**: 14 specialized test modules covering all major functionality
+- **Configuration Management**: Unified PostgreSQL environment for all deployments
 - **Cloud Integration**: Supabase PostgreSQL with secure cloud-based data management
 - **Authentication System**: Advanced JWT implementation with comprehensive test validation
 - **Quality Assurance**: Complete API testing with role-based access and data integrity verification
@@ -485,19 +464,19 @@ Production Server
 - ✅ **Maintainability**: Clear separation of concerns and comprehensive documentation
 - ✅ **Extensibility**: Plugin-ready AI and service integrations with test coverage
 - ✅ **Production Ready**: Cloud database integration with Supabase PostgreSQL
-- ✅ **Test Coverage**: 12 specialized test modules ensuring system reliability
+- ✅ **Test Coverage**: 14 specialized test modules ensuring system reliability
 
 ---
 
 ## 📞 Architecture Support
 
 **System Architecture**: Modular FastAPI with PostgreSQL cloud database integration  
-**Database Layer**: Production PostgreSQL on Supabase with development SQLite support  
+**Database Layer**: Production PostgreSQL on Supabase with unified configuration  
 **Integration Layer**: Enhanced AI services with comprehensive test coverage  
 **Security Model**: JWT-based authentication with complete testing validation  
 
 ---
 
-*Architecture Document Version: 2.2*  
-*Last Updated: July 10, 2025*  
-*Status: Production Ready with Advanced Testing Framework & Quality Assurance*
+*Architecture Document Version: 1.3*  
+*Last Updated: July 12, 2025*  
+*Status: Production Ready with Enhanced Documentation & Testing Infrastructure*

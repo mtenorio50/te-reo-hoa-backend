@@ -85,7 +85,7 @@ async def admin_refresh_news(
     return {"added": added, "message": f"{added} new news stories added."}
 
 
-@router.post("/refresh", tags=["News"],
+@router.post("/refresh/manual", tags=["News"],
              summary="Manually trigger news refresh",
              description="Manually refresh news from AI. Admin access required.")
 def manual_news_refresh_endpoint(

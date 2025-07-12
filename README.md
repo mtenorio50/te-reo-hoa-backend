@@ -5,7 +5,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
 [![PostgreSQL](https://img.shields.io/badge/postgresql-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 [![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 
 ---
@@ -25,109 +24,7 @@ Te Reo Hoa is a modern, scalable backend API designed to power an English-to-Mā
 - 📊 **Progress Tracking** - Detailed user learning analytics
 - 🚀 **Auto-Provisioning** - Intelligent database setup with cross-platform compatibility
 - 🗃️ **PostgreSQL Integration** - Production-grade database with Supabase cloud hosting
-- 🧪 **Comprehensive Testing** - Advanced test suite with 12 specialized test modules
-
----
-
-## 🚀 Latest Updates (July 10, 2025)
-
-### Advanced Testing Framework & Quality Assurance Enhancement ✅
-- **Enhanced Testing Infrastructure**: Advanced test framework with comprehensive fixtures and mocking
-- **Expanded Test Coverage**: 12 specialized test modules covering all critical functionality areas
-- **Advanced Test Automation**: Comprehensive mocking and fixture management for reliable testing
-- **Quality Assurance**: Complete endpoint coverage with authentication and authorization testing
-- **Role-Based Testing**: Comprehensive testing of admin vs learner permissions and data isolation
-
-### Comprehensive Testing Infrastructure ✅
-- **12 Specialized Test Modules**: Complete coverage including API endpoints, user management, and AI integration
-- **Advanced Fixtures**: Enhanced `conftest.py` with automated admin and learner registration
-- **Test Isolation**: Improved database setup with proper cleanup and cross-user data isolation
-- **Mocking Framework**: AI integration mocking with consistent test responses
-- **Edge Case Coverage**: Comprehensive testing of invalid inputs, unauthorized access, and error handling
-
----
-
-## 🚀 Previous Updates (June 30, 2025)
-
-### Infrastructure Improvements ✅
-- **Enhanced Database Configuration**: Robust SQLite setup with automatic directory creation
-- **Cross-Platform Compatibility**: Consistent behavior across Windows, macOS, and Linux
-- **Intelligent Error Handling**: Comprehensive database connection error recovery
-- **Environment Configuration**: Streamlined setup with intelligent fallback systems
-- **Login Endpoint Optimization**: Dual-path support resolving 307 redirect issues
-
-### New Features ✅
-- **TTS Caching System**: Intelligent audio file caching for improved performance
-- **Enhanced AI Integration**: Extended timeout handling and improved response parsing
-- **Auto-Provisioning**: Automatic creation of database directories and configuration files
-- **Debug Integration**: Real-time database path and connection status reporting
-
----
-
-## 🏗️ Architecture
-
-### Project Structure
-
-```
-te-reo-hoa-backend/
-├── 📱 app/                    # Main application package
-│   ├── 🛣️ router/            # API endpoint organization
-│   │   ├── login.py          # Authentication (dual-path support)
-│   │   ├── users.py          # User management endpoints
-│   │   ├── words.py          # Vocabulary management
-│   │   ├── translate.py      # Translation services
-│   │   ├── tts.py            # Text-to-Speech with caching
-│   │   ├── progress.py       # Learning progress tracking
-│   │   ├── quiz.py           # Assessment functionality
-│   │   └── news.py           # News content delivery
-│   ├── models.py             # SQLAlchemy database models
-│   ├── schemas.py            # Pydantic validation schemas
-│   ├── database.py           # Intelligent database configuration
-│   ├── crud.py               # Database operation abstractions
-│   ├── auth.py               # Authentication & authorization
-│   ├── ai_integration.py     # External AI service integrations
-│   └── utils.py              # Shared utility functions
-├── 📊 data/                   # Database storage (environment-dependent)
-│   ├── te_reo_hoa.db         # SQLite database file (development)
-│   └── postgresql://         # PostgreSQL connection (production)
-├── 🔊 static/                 # Static file serving
-│   └── audio/                # Generated pronunciation files
-│       └── tts_cache/        # Cached TTS audio files
-├── ⚙️ config/                # Configuration files
-│   └── settings.json         # Admin and application settings
-├── 📚 docs/                   # Project documentation
-│   ├── Architecture.md       # System architecture guide
-│   └── Progress.md           # Development timeline
-├── 🧪 tests/                  # Comprehensive test suite
-│   ├── test_ai_function.py   # AI integration testing
-│   ├── test_api_progress.py  # Progress tracking API testing
-│   ├── test_api_users.py     # User management API testing
-│   ├── test_api_words.py     # Word management API testing
-│   ├── test_connection.py    # Database connectivity testing
-│   ├── test_endpoint_auth.py # Authentication testing
-│   ├── test_listing_words.py # Word listing functionality
-│   ├── test_login.py         # Login system testing
-│   ├── test_search_words.py  # Search functionality testing
-│   ├── test_user_regsiter.py # User registration testing
-│   ├── test_WOTD.py          # Word of the Day testing
-│   ├── ipa.py                # IPA phonetic utilities
-│   └── conftest.py           # Test configuration and fixtures
-├── main.py                   # Application entry point
-├── requirements.txt          # Python dependencies
-└── README.md                 # This file
-```
-
-### Technology Stack
-
-- **Framework**: FastAPI (high-performance async web framework)
-- **Database**: PostgreSQL with Supabase cloud hosting (production) / SQLite (development)
-- **Authentication**: JWT tokens with bcrypt password hashing
-- **AI Services**: 
-  - Google Gemini API (translation and content generation)
-  - AWS Polly (Māori text-to-speech synthesis)
-- **Validation**: Pydantic schemas for type safety
-- **Scheduling**: APScheduler for background tasks
-- **Testing**: Pytest with comprehensive coverage
+- 🧪 **Comprehensive Testing** - Advanced test suite with 14 specialized test modules
 
 ---
 
@@ -169,9 +66,6 @@ te-reo-hoa-backend/
    # Database Configuration (Production)
    POSTGRE_SQLALCHEMY_DATABASE_URL=postgresql://username:password@host:port/database
 
-   # Database Configuration (Development - Optional)
-   SQLALCHEMY_DATABASE_URL=sqlite:///./data/te_reo_hoa.db
-
    # JWT Configuration
    SECRET_KEY=your-super-secret-jwt-key-here
    ALGORITHM=HS256
@@ -201,25 +95,134 @@ te-reo-hoa-backend/
 6. **Access the API**
    - **API Documentation**: http://localhost:8000/docs
    - **Alternative Docs**: http://localhost:8000/redoc
-   - **Health Check**: http://localhost:8000/
+   - **Health Check**: http://localhost:8000/health
+   - **Root Endpoint**: http://localhost:8000/
+
+--
+
+## 🚀 Latest Updates (July 12, 2025)
+
+### Enhanced Documentation & Testing Infrastructure ✅
+- **Advanced Testing Framework**: 14 specialized test modules covering all critical functionality areas
+- **Audio Processing Enhancement**: Added TTS audio synthesis testing with comprehensive audio validation
+- **IPA Phonetic Integration**: Enhanced phonetic transcription support for accurate pronunciation
+- **Production Deployment Ready**: Render.com deployment configuration with health monitoring
+
+### System Architecture Improvements ✅
+- **Router-Based Architecture**: Modular endpoint organization with dedicated router modules
+- **Enhanced Error Handling**: Comprehensive exception management across all API endpoints
+- **Static File Management**: Optimized static file serving for audio and media assets
+- **Configuration Management**: JSON-based settings with environment-specific configurations
+- **Health Monitoring**: Dedicated health check endpoints for deployment monitoring
+
+---
+
+## 🚀 Previous Updates (June 30, 2025)
+
+### Infrastructure Improvements ✅
+- **Enhanced Database Configuration**: Robust PostgreSQL setup with automatic connection management
+- **Cross-Platform Compatibility**: Consistent behavior across Windows, macOS, and Linux
+- **Intelligent Error Handling**: Comprehensive database connection error recovery
+- **Environment Configuration**: Streamlined setup with intelligent fallback systems
+- **Login Endpoint Optimization**: Dual-path support resolving 307 redirect issues
+
+### New Features ✅
+- **TTS Caching System**: Intelligent audio file caching for improved performance
+- **Enhanced AI Integration**: Extended timeout handling and improved response parsing
+- **Auto-Provisioning**: Automatic creation of database directories and configuration files
+- **Debug Integration**: Real-time database path and connection status reporting
+
+---
+
+## 🏗️ Architecture
+
+### Project Structure
+
+```
+te-reo-hoa-backend/
+├── 📱 app/                    # Main application package
+│   ├── 🛣️ router/            # API endpoint organization
+│   │   ├── login.py          # Authentication endpoints
+│   │   ├── users.py          # User management endpoints
+│   │   ├── words.py          # Vocabulary management
+│   │   ├── translate.py      # Translation services
+│   │   ├── tts.py            # Text-to-Speech with caching
+│   │   ├── progress.py       # Learning progress tracking
+│   │   ├── quiz.py           # Assessment functionality
+│   │   └── news.py           # News content delivery
+│   ├── models.py             # SQLAlchemy database models
+│   ├── schemas.py            # Pydantic validation schemas
+│   ├── database.py           # Database configuration & connection
+│   ├── db_initialize.py      # Database initialization utilities
+│   ├── crud.py               # Database operation abstractions
+│   ├── auth.py               # Authentication & authorization
+│   ├── ai_integration.py     # External AI service integrations
+│   └── utils.py              # Shared utility functions
+├── 📊 static/                 # Static file serving
+│   └── audio/                # Audio file management
+│       └── tts_cache/        # Cached TTS audio files
+├── ⚙️ config/                # Configuration files
+│   └── settings.json         # Admin and application settings
+├── 📚 docs/                   # Project documentation
+│   ├── Architecture.md       # System architecture guide
+│   ├── Progress.md           # Development timeline
+├── 🧪 tests/                  # Comprehensive test suite (14 modules)
+│   ├── test_ai_function.py   # AI integration testing
+│   ├── test_api_*.py         # API endpoint testing (news, progress, users, words)
+│   ├── test_audio_synthesis.py # TTS audio processing testing
+│   ├── test_connection.py    # Database connectivity testing
+│   ├── test_endpoint_auth.py # Authentication testing
+│   ├── test_ipa_phonetic.py  # IPA phonetic transcription testing
+│   ├── test_listing_words.py # Word listing functionality
+│   ├── test_login.py         # Login system testing
+│   ├── test_search_words.py  # Search functionality testing
+│   ├── test_user_regsiter.py # User registration testing
+│   ├── test_WOTD.py          # Word of the Day testing
+│   ├── ipa.py                # IPA phonetic utilities
+│   └── conftest.py           # Test configuration and fixtures
+├── .github/                  # GitHub Actions and workflows
+├── main.py                   # Application entry point with scheduler
+├── requirements.txt          # Python dependencies (100+ packages)
+├── .env                      # Environment configuration
+├── app.log                   # Application logging
+└── README.md                 # This documentation
+```
+
+### Technology Stack
+
+- **Framework**: FastAPI (high-performance async web framework)
+- **Database**: PostgreSQL with Supabase cloud hosting
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **AI Services**: 
+  - Google Gemini API (translation and content generation)
+  - AWS Polly (Māori text-to-speech synthesis)
+- **Audio Processing**: TTS synthesis with intelligent caching system
+- **Validation**: Pydantic schemas for comprehensive type safety
+- **Scheduling**: APScheduler for background tasks and automation
+- **Testing**: Pytest with 14 specialized test modules for comprehensive coverage
+- **Deployment**: Render.com compatible with health monitoring
+- **Logging**: Structured logging with file and console output
+- **Static Files**: FastAPI StaticFiles for efficient media serving
+
+---
 
 ### 🔧 Configuration Notes
 
 #### Database Setup
 - **Production Database**: PostgreSQL on Supabase for scalable, cloud-based data management
-- **Development Database**: SQLite with auto-provisioning for local development
-- **Dual Configuration**: Supports both PostgreSQL and SQLite through environment variables
-- **Migration Path**: Seamless migration from SQLite development to PostgreSQL production
+- **Configuration**: Uses `POSTGRE_SQLALCHEMY_DATABASE_URL` environment variable
+- **Connection**: Automatic connection pooling and session management
 
 #### Database Configuration Options
-- **Primary (Production)**: Use `POSTGRE_SQLALCHEMY_DATABASE_URL` for PostgreSQL
-- **Secondary (Development)**: Use `SQLALCHEMY_DATABASE_URL` for SQLite
-- **Auto-Detection**: System automatically detects and uses the appropriate database configuration
+- **Primary**: Uses `POSTGRE_SQLALCHEMY_DATABASE_URL` for PostgreSQL connection
+- **Auto-Detection**: System automatically validates database connection on startup
 
 #### Admin Account
-- **Default Admin**: Automatically created on first startup
+- **Default Admin**: Automatically created on first startup from `config/settings.json`
 - **Configuration**: Modify `config/settings.json` to change default admin credentials
-- **Security**: Change default password immediately in production
+- **Fallback Credentials**: admin@admin.com/123456 (if config file missing)
+- **Auto-Promotion**: Existing users are automatically promoted to admin role if needed
+- **Security**: Change default password immediately in production environments
 
 ---
 
@@ -278,8 +281,12 @@ te-reo-hoa-backend/
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| `GET` | `/news/` | Get curated positive news | ✅ |
-| `GET` | `/news/{news_id}` | Get specific news article | ✅ |
+| `GET` | `/news/` | Get latest 10 positive news stories | ❌ |
+| `GET` | `/news/all` | Get paginated list of all news stories | ✅ (Admin) |
+| `POST` | `/news/refresh` | Refresh news from Gemini AI | ✅ (Admin) |
+| `POST` | `/news/refresh/manual` | Manually trigger news refresh | ✅ (Admin) |
+| `GET` | `/news/scheduler-status` | Check news scheduler status | ✅ (Admin) |
+| `DELETE` | `/news/{news_id}` | Delete specific news article | ✅ (Admin) |
 
 ---
 
@@ -344,33 +351,45 @@ AWS_REGION=us-east-1
 # Install test dependencies
 pip install pytest pytest-asyncio pytest-cov
 
-# Run all tests
+# Run all tests (14 test modules)
 pytest
 
-# Run with coverage
+# Run with coverage report
 pytest --cov=app tests/
 
-# Run specific test modules
+# Run specific test categories
+pytest tests/test_api_*.py -v              # All API endpoint tests
 pytest tests/test_ai_function.py -v        # AI integration tests
-pytest tests/test_api_progress.py -v       # Progress tracking API tests
-pytest tests/test_api_users.py -v          # User management API tests
-pytest tests/test_api_words.py -v          # Word management API tests
+pytest tests/test_audio_synthesis.py -v    # TTS audio processing tests
+pytest tests/test_ipa_phonetic.py -v       # IPA phonetic transcription tests
 pytest tests/test_connection.py -v         # Database connection tests
 pytest tests/test_endpoint_auth.py -v      # Authentication tests
 pytest tests/test_login.py -v              # Login functionality tests
 pytest tests/test_search_words.py -v       # Search functionality tests
+pytest tests/test_WOTD.py -v               # Word of the Day tests
+
+# Run tests with detailed output
+pytest -v --tb=short
+
+# Run tests with coverage and HTML report
+pytest --cov=app --cov-report=html tests/
 ```
 
 ### Test Structure
-- **Unit Tests**: Individual component testing across 12 specialized modules
+- **Unit Tests**: Individual component testing across 14 specialized modules
 - **Integration Tests**: API endpoint testing with authentication validation
-- **Database Tests**: Connection and transaction testing for both PostgreSQL and SQLite
+- **Database Tests**: Connection and transaction testing for PostgreSQL
 - **Authentication Tests**: Complete security mechanism verification
 - **AI Integration Tests**: External service testing with mock responses
+- **Audio Processing Tests**: TTS synthesis and audio file validation
+- **IPA Phonetic Tests**: Phonetic transcription accuracy and formatting
 - **Search Tests**: Word search and discovery functionality validation
 - **User Management Tests**: Registration, role-based access, and permission testing
 - **Progress Tracking Tests**: Learning progress accuracy and consistency validation
 - **Word Management Tests**: CRUD operations, duplicate detection, and data integrity
+- **News API Tests**: Content delivery and filtering functionality
+- **Error Handling Tests**: Comprehensive exception management and edge case coverage
+- **Performance Tests**: Response time and resource usage validation
 
 ---
 
@@ -412,9 +431,6 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 # Production database (required)
 POSTGRE_SQLALCHEMY_DATABASE_URL=postgresql://username:password@host:port/database
 
-# Development database (optional)
-SQLALCHEMY_DATABASE_URL=sqlite:///./data/te_reo_hoa.db
-
 # Strong secret key
 SECRET_KEY=your-strong-production-secret-key
 
@@ -429,20 +445,24 @@ AWS_SECRET_ACCESS_KEY=your-production-aws-secret
 ## 📊 Performance & Monitoring
 
 ### Built-in Features
-- **Comprehensive Logging**: Structured logging with file and console output
-- **Database Connection Monitoring**: Real-time connection status and path validation
+- **Comprehensive Logging**: Structured logging with file (`app.log`) and console output
+- **Database Connection Monitoring**: Real-time connection status and health validation
 - **AI Service Monitoring**: Request/response tracking for external services
 - **Performance Metrics**: Response time tracking and resource usage monitoring
+- **Health Endpoints**: Multiple health check endpoints for deployment monitoring
+- **Scheduler Monitoring**: Background task execution tracking and error reporting
 
 ### Monitoring Endpoints
-- **Health Check**: `GET /` - Basic application health
-- **Cache Info**: `GET /tts/cache/info` - TTS cache statistics
-- **Database Status**: Built-in database connection monitoring
+- **Health Check**: `GET /health` - Comprehensive application health status
+- **Root Status**: `GET /` - Basic application availability
+- **Cache Info**: `GET /tts/cache/info` - TTS cache statistics and performance
+- **Static Files**: `GET /static/*` - Media file access and delivery monitoring
 
 ### Log Files
 - **Application Logs**: `app.log` (in project root)
 - **Error Tracking**: Comprehensive error logging with stack traces
 - **Performance Logs**: Request timing and resource usage
+- **Scheduler Logs**: Background task execution and timing information
 
 ---
 
@@ -485,12 +505,12 @@ bandit -r app/
 
 #### Database Connection Errors
 ```bash
-# Error: unable to open database file
-# Solution: Check database path and permissions
+# Error: connection to PostgreSQL failed
+# Solution: Check connection string and credentials
 ```
-- **Auto-Fix**: The application automatically creates missing directories
-- **Manual Fix**: Ensure `/data` directory exists with write permissions
-- **Debug**: Check logs for database path resolution details
+- **Connection Issues**: Verify PostgreSQL connection string format
+- **Credentials**: Ensure database credentials are correct in .env file
+- **Network**: Check network connectivity to database host
 
 #### TTS Cache Issues
 ```bash
@@ -525,6 +545,7 @@ uvicorn main:app --reload --log-level debug
 - **Architecture Guide**: [`docs/Architecture.md`](docs/Architecture.md)
 - **Development Progress**: [`docs/Progress.md`](docs/Progress.md)
 - **API Documentation**: http://localhost:8000/docs (when running)
+- **Alternative API Docs**: http://localhost:8000/redoc (when running)
 
 ### Support Channels
 - **Issues**: GitHub Issues for bug reports and feature requests
@@ -541,8 +562,16 @@ This project is part of the MSE800 Post School Education program at YooBee Colle
 
 ## 🔄 Changelog
 
-### Version 1.2 (July 10, 2025)
-- ✅ **Advanced Testing Framework**: Enhanced test infrastructure with 12 specialized test modules
+### Version 1.3 (July 12, 2025)
+- ✅ **Enhanced Testing Infrastructure**: 14 specialized test modules with comprehensive coverage
+- ✅ **Audio Processing Enhancement**: TTS audio synthesis testing with comprehensive validation
+- ✅ **IPA Phonetic Integration**: Enhanced phonetic transcription support for accurate pronunciation
+- ✅ **Production Deployment Ready**: Render.com deployment configuration with health monitoring
+- ✅ **Router-Based Architecture**: Modular endpoint organization with dedicated router modules
+- ✅ **Configuration Management**: JSON-based settings with environment-specific configurations
+
+### Version 1.3 (July 12, 2025) - Current
+- ✅ **Advanced Testing Framework**: Enhanced test infrastructure with 14 specialized test modules
 - ✅ **Quality Assurance Enhancement**: Comprehensive endpoint coverage and role-based testing
 - ✅ **Test Automation**: Advanced fixtures and mocking framework for reliable testing
 - ✅ **Data Integrity Testing**: Cross-user data isolation and transaction integrity verification
@@ -550,7 +579,7 @@ This project is part of the MSE800 Post School Education program at YooBee Colle
 
 ### Version 1.1 (July 2, 2025)
 - ✅ **Database Migration & Production Scaling**: PostgreSQL integration with Supabase cloud hosting
-- ✅ **Dual Database Support**: PostgreSQL for production, SQLite for development
+- ✅ **PostgreSQL-Only Configuration**: Unified PostgreSQL environment for all deployments
 - ✅ **Enhanced Performance**: Improved query performance and connection pooling
 - ✅ **Testing Infrastructure**: Comprehensive test suite with database isolation
 - ✅ **Production Readiness**: Cloud database architecture for high-availability deployment
@@ -563,5 +592,5 @@ This project is part of the MSE800 Post School Education program at YooBee Colle
 
 ---
 
-*Last Updated: July 10, 2025*  
-*Status: Production Ready with Advanced Testing Framework*
+*Last Updated: July 12, 2025*  
+*Status: Production Ready with Enhanced Documentation & Testing Infrastructure*
