@@ -49,3 +49,9 @@ Thumbs.db
 
 # Migrations (if using Alembic and don't want them tracked)
 # migrations/
+
+# Folder
+Submission_Docs/
+
+#workspace
+*.code-workspace
